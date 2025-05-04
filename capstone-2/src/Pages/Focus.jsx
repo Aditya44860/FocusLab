@@ -1,9 +1,35 @@
-import React from 'react'
+import React from 'react';
+import Timer from '../components/Timer';
+import TodoList from '../components/TodoList';
+import HabitTracker from '../components/HabitTracker';
+import Notes from '../components/Notes';
 
 const Focus = () => {
-  return (
-    <div>Focus</div>
-  )
-}
+    return (
+      <div>
+        <main className="max-w-5xl mx-auto px-4 py-8">
+          {/* Header */}
+          <div className="text-center my-10">
+            <h1 className="text-6xl font-light text-[#4C4037]">Let's Get Into It</h1>
+            <p className="text-[#7B5B44]">Time to Learn, Grow, Repeat</p>
+            <button className="mt-4 border border-[#3d2e25] px-4 py-1 rounded-full text-sm">
+              {new Date().toLocaleDateString('en-US', {
+                month: 'short',
+                day: '2-digit',
+              })}
+            </button>
+          </div>
+  
+          {/* Grid of Components */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Timer />
+            <TodoList />
+            <HabitTracker />
+            <Notes />
+          </div>
+        </main>
+      </div>
+    );
+  };  
 
 export default Focus
