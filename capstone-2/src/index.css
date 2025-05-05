@@ -61,3 +61,11 @@ html, body {
   text-shadow: 0 0 5px rgba(251, 240, 227, 0.5);
 }
 
+.threeD{
+  transition: text-shadow 0.2s ease;
+  transition-delay: 0.3;
+}
+.threeD:hover{
+  text-shadow: 1px 1px 8px rgba(106, 63, 23, 0.494);
+  
+}
