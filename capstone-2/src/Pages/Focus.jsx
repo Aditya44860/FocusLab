@@ -2,7 +2,7 @@ import React from 'react';
 import Timer from '../components/Timer';
 import TodoList from '../components/TodoList';
 import HabitTracker from '../components/HabitTracker';
-import Notes from '../components/Notes';
+import Notes from '../components/QuickNotes';
 
 const Focus = () => {
     return (

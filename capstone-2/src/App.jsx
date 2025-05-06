@@ -14,7 +14,6 @@ const App = () => {
     { path: '/Focus', element: <><Navbar/><Focus/></>},
     { path: '/Groups', element: <><Navbar/><Groups/></>},
     { path: '/Notes', element: <><Navbar/><Notes/></>}
-
   ])
 
   return (

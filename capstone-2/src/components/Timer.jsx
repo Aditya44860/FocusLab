@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FiSettings, FiRefreshCcw, FiPlay, FiPause } from "react-icons/fi";
+import { useLocation } from "react-router-dom";
 
 const Timer = () => {
   const [minutes, setMinutes] = useState(25);
@@ -20,6 +21,7 @@ const Timer = () => {
 
   const toggleTimer = () => setIsActive((prev) => !prev);
 
+  // timer logic
   useEffect(() => {
     if (isActive) {
       timeoutRef.current = setTimeout(() => {
@@ -31,9 +33,8 @@ const Timer = () => {
         } else {
           clearTimeout(timeoutRef.current);
           setIsActive(false);
-          setAlarmPlaying(true); // Set alarm playing to true when time's up
-          alarmRef.current.play();
-          
+          setAlarmPlaying(true); // alarm 
+          alarmRef.current.play();      
         }
       }, 1000);
     } else {
@@ -42,8 +43,8 @@ const Timer = () => {
     return () => clearTimeout(timeoutRef.current);
   }, [isActive, seconds, minutes]);
 
-  useEffect(() => {
-    // Updating the document title 
+  // updating the document title
+  useEffect(() => { 
     if (isActive) {
       document.title = `FocusLab - ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
     } else if (minutes === 0 && seconds === 0) {
@@ -53,6 +54,7 @@ const Timer = () => {
     }
   }, [minutes, seconds, isActive]);
 
+  // modes settings
   const setTimerMode = (newMode) => {
     setMode(newMode);
     const time =
@@ -93,7 +95,7 @@ const Timer = () => {
       },
     };
   
-    // Validation: Reject any 00:00 setting
+    // Rejecting any 00:00 setting
     for (const [label, time] of Object.entries(newDefaults)) {
       if (time.min === 0 && time.sec === 0) {
         alert(`${label} time cannot be 00:00`);
@@ -105,6 +107,7 @@ const Timer = () => {
     setShowSettings(false);
   };
 
+  // updating time with deafaults change
   useEffect(() => {
     const time =
       defaults[
@@ -120,11 +123,13 @@ const Timer = () => {
     setAlarmPlaying(false);
   }, [defaults, mode]);
 
+
+// stopping the alarm
 const stopAlarm = () => {
   alarmRef.current.pause();
   alarmRef.current.currentTime = 0;
   setAlarmPlaying(false);
-  setTimerMode(mode); // ✅ Reset timer only after user stops the alarm
+  setTimerMode(mode); 
 };
 
   return (
@@ -179,7 +184,7 @@ const stopAlarm = () => {
         />
       </div>
 
-      {/* Settings Popup */}
+      {/* Settings */}
       {showSettings && (
         <div className="absolute top-0 left-0 w-full h-full bg-[#00000066] flex items-center justify-center z-10">
           <div className="bg-[#EFD6B1] text-[#4C3A26] border-2 border-[#C49B59] rounded-2xl p-6 w-[90%] max-w-md">
@@ -279,15 +284,16 @@ const stopAlarm = () => {
           </div>
         </div>
       )}
-      {/* Audio Alarm */}
+
+      {/*  Alarm  */}
       <audio ref={alarmRef} src="./public/audio/continu.mp3" />
       {alarmPlaying && (
         <button
-          className="mt-4 px-4 py-2 bg-[#C49B59] text-white rounded hover:brightness-110 transition"
+          className="mt-4 px-4 py-2 w-full bg-[#C49B59] text-white rounded hover:brightness-110 transition"
           onClick={stopAlarm}
         >
           Stop Alarm
-        </button>
+        </button> 
       )}
     </div>
   );
