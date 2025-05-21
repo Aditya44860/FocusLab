@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FiPlus } from 'react-icons/fi'; 
-import { FiBold } from 'react-icons/fi';
+import { FiPlus, FiBold } from 'react-icons/fi'; 
 
 const Notes = () => {
   const [note, setNote] = useState('');
@@ -33,15 +32,11 @@ const Notes = () => {
   };
 
   const toggleBold = () => {
-    const textarea = textareaRef.current;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-
-    if (start === end) return; // No text selected
+   
   };
 
   return (
-    <div className="w-full h-auto bg-[#F7E5C5] border-2 rounded-2xl border-[#C49B59] p-4">
+    <div className="w-full h-auto bg-[#F7E5C5] border-2 rounded-2xl border-[#C49B59] p-4 pb-0">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-2">
           <button
@@ -60,7 +55,6 @@ const Notes = () => {
         >
           <FiPlus size={20} />
         </button>
-
       </div>
       
       <textarea
@@ -70,6 +64,15 @@ const Notes = () => {
         value={note}
         onChange={(e) => setNote(e.target.value)}
       />
+      <div className="flex justify-center p-0 mb-1">
+        <button
+          onClick={() => setNote('')} 
+          className="text-[#5B4636] hover:text-red-500 transition"
+          aria-label="Clear note"
+        >
+          Clear
+        </button>
+      </div>
     </div>
   );
 };
