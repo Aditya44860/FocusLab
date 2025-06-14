@@ -64,13 +64,13 @@ const Home = () => {
     <div className="bg-[#E9CA9F] text-[#4C4037] overflow-x-hidden">
       <div className="relative w-full" style={{ height: "calc(100vh - 5rem)" }}>
         <img
-          src="src/assets/pen.png"
+          src="/assets/pen.png"
           alt="Pen"
           className="absolute left-[-7rem] bottom-10 w-100 mix-blend-darken opacity-20"
           style={floatFast}
         />
         <img
-          src="src/assets/coffee.png"
+          src="/assets/coffee.png"
           alt="Coffee"
           className="absolute right-[-5rem] top-32 w-100 mix-blend-darken opacity-20 rotate-[-15deg]"
           style={floatFast}
@@ -110,25 +110,25 @@ const Home = () => {
       {/* Personalized Learning */}
       <section className="relative py-28 px-10 border-t border-[#d3ac77]">
         <img
-          src="src/assets/clock.png"
+          src="/assets/clock.png"
           alt="Clock Doodle"
           className="absolute right-[-5rem] top-35 w-88 mix-blend-darken opacity-20 rotate-[-14deg]"
           style={floatFast}
         />
         <img
-          src="src/assets/ink.png"
+          src="/assets/ink.png"
           alt="Ink Doodle"
           className="absolute left-[-5rem] top-1/2 w-80 mix-blend-darken opacity-20 rotate-12"
           style={floatFast}
         />
         <img
-          src="src/assets/graph1.png"
+          src="/assets/graph1.png"
           alt="Graph Doodle"
           className="absolute left-[45rem] top-115 w-35 mix-blend-darken opacity-20"
           style={floatStyle}
         />
         <img
-          src="src/assets/graph2.png"
+          src="/assets/graph2.png"
           alt="Graph Doodle"
           className="absolute left-[59rem] top-110 w-38 mix-blend-darken opacity-20"
           style={floatStyle}
@@ -149,7 +149,7 @@ const Home = () => {
             initial="hidden"
             whileInView="visible"
             className="w-92 mix-blend-darken"
-            src="src/assets/capstone_pl.png"
+            src="/assets/capstone_pl.png"
             alt="Personalised Learning"
             viewport={{ once: true }}
           />
@@ -173,25 +173,25 @@ const Home = () => {
       {/* Notes Sharing */}
       <section className="relative py-28 px-10 border-t border-[#d3ac77]">
         <img
-          src="src/assets/coffee.png"
+          src="/assets/coffee.png"
           alt="Coffee Doodle"
           className="absolute left-0 top-30 w-54 mix-blend-darken opacity-20 -scale-x-100 rotate-15"
           style={floatFast}
         />
         <img
-          src="src/assets/book.png"
+          src="/assets/book.png"
           alt="Notebook Doodle"
           className="absolute right-0 top-64 w-60 mix-blend-darken opacity-20 -scale-x-100"
           style={floatFast}
         />
         <img
-          src="src/assets/notes.png"
+          src="/assets/notes.png"
           alt="Notes Doodle"
           className="absolute left-230 top-22 w-34 mix-blend-darken opacity-20"
           style={floatStyle}
         />
         <img
-          src="src/assets/pen.png"
+          src="/assets/pen.png"
           alt="Pen Doodle"
           className="absolute left-253 top-33 w-19 mix-blend-darken opacity-20 rotate-[-15deg]"
           style={floatStyle}
@@ -213,7 +213,7 @@ const Home = () => {
             initial="hidden"
             whileInView="visible"
             className="w-92 mix-blend-darken"
-            src="src/assets/capstone_notes.png"
+            src="/assets/capstone_notes.png"
             alt="Notes Sharing"
             viewport={{ once: true }}
           />
@@ -236,25 +236,25 @@ const Home = () => {
       {/* Study in Groups */}
       <section className="relative py-28 px-10 border-t border-[#d3ac77]">
         <img
-          src="src/assets/book.png"
+          src="/assets/book.png"
           alt="Book Doodle"
           className="absolute left-0 bottom-60 w-60 mix-blend-darken opacity-20"
           style={floatFast}
         />
         <img
-          src="src/assets/chat.png"
+          src="/assets/chat.png"
           alt="Chat Doodle"
           className="absolute right-100 bottom-94 w-44 mix-blend-darken opacity-20 rotate-[-11deg]"
           style={floatStyle}
         />
         <img
-          src="src/assets/notes.png"
+          src="/assets/notes.png"
           alt="Notes Doodle"
           className="absolute left-135 bottom-10 w-34 mix-blend-darken opacity-20 rotate-[11deg]"
           style={floatSlow}
         />
         <img
-          src="src/assets/ink.png"
+          src="/assets/ink.png"
           alt="Ink Doodle"
           className="absolute bottom-3 w-74 mix-blend-darken opacity-20 rotate-[-11deg] right-[-3rem]"
           style={floatFast}
@@ -275,7 +275,7 @@ const Home = () => {
             initial="hidden"
             whileInView="visible"
             className="w-72 mix-blend-darken"
-            src="src/assets/capstone_gs.png"
+            src="/assets/capstone_gs.png"
             alt="Personalised Learning"
             viewport={{ once: true }}
           />
@@ -298,13 +298,13 @@ const Home = () => {
       {/* Footer */}
       <footer className="relative py-24 px-10 text-center border-t border-[#d3ac77]">
         <img
-          src="src/assets/coffee.png"
+          src="/assets/coffee.png"
           alt="Coffee Doodle"
           className="absolute left-0 top-10 w-54 mix-blend-darken opacity-20 -scale-x-100 rotate-12"
           style={floatFast}
         />
         <img
-          src="src/assets/pen.png"
+          src="/assets/pen.png"
           alt="Pen Doodle"
           className="absolute right-30 top-25 w-34 mix-blend-darken opacity-20 rotate-[-12deg]"
           style={floatFast}
