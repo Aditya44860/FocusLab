@@ -185,7 +185,7 @@ const Home = () => {
           style={floatFast}
         />
         <img
-          src="/assets/notes.png"
+          src="/assets/Notes.png"
           alt="Notes Doodle"
           className="absolute left-230 top-22 w-34 mix-blend-darken opacity-20"
           style={floatStyle}
@@ -248,7 +248,7 @@ const Home = () => {
           style={floatStyle}
         />
         <img
-          src="/assets/notes.png"
+          src="/assets/Notes.png"
           alt="Notes Doodle"
           className="absolute left-135 bottom-10 w-34 mix-blend-darken opacity-20 rotate-[11deg]"
           style={floatSlow}
