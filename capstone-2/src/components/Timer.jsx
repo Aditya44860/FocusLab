@@ -134,7 +134,7 @@ const stopAlarm = () => {
 
   return (
     <div className="relative w-full h-auto bg-[#F7E5C5] border-2 rounded-2xl border-[#C49B59] p-4 text-center">
-      <h1 className="text-9xl text-[#4C3A26] font-semibold">
+      <h1 className="text-9xl text-[#4C3A26]">
         {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
       </h1>
 
@@ -161,7 +161,7 @@ const stopAlarm = () => {
         </button>
       </div>
 
-      <div className="mt-6 flex justify-between items-center">
+      <div className="mt-12 flex justify-between items-center">
         <FiSettings
           className="text-[#4C4037] text-3xl cursor-pointer hover:scale-110 transition-all mx-2 p-0"
           onClick={() => setShowSettings(true)}

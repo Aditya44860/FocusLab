@@ -31,22 +31,10 @@ const Notes = () => {
     }, 0);
   };
 
-  const toggleBold = () => {
-   
-  };
-
   return (
     <div className="w-full h-auto bg-[#F7E5C5] border-2 rounded-2xl border-[#C49B59] p-4 pb-0">
       <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={toggleBold}
-            className="text-[#5B4636] hover:text-[#a66e2f] transition"
-            aria-label="Bold text"
-          >
-            <FiBold size={20} />
-          </button>
-        </div>
+        
         <h2 className="text-xl font-semibold text-[#5B4636] flex-1 text-center">Quick Notes</h2>
         <button
           onClick={insertBullet}
