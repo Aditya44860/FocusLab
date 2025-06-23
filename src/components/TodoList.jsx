@@ -30,7 +30,7 @@ const TodoList = () => {
         </h2>
       </div>
 
-      <div className="w-full p-4 mb-4 rounded-xl border border-[#C49B59] text-[#5B4636] bg-[#FFF7EA] shadow-inner max-h-64 overflow-scroll">
+      <div className="w-full p-4 mb-4 rounded-xl border border-[#C49B59] text-[#5B4636] bg-[#FFF7EA] shadow-inner max-h-69 overflow-scroll">
         {/* Task input and add button */}
         <div className="flex items-center mb-4">
           <input
@@ -52,7 +52,7 @@ const TodoList = () => {
         {/* Task list */}
         <div className="space-y-2 ">
           {tasks.map((task) => (
-            <div key={task.id} className="flex items-center p-2 bg-white rounded-lg">
+            <div key={task.id} className="flex items-center p-2 rounded-lg bg-white border border-[#C49B59]">
               <input
                 type="checkbox"
                 checked={task.completed}
@@ -64,7 +64,7 @@ const TodoList = () => {
               </span>
               <button
                 onClick={() => removeTask(task.id)}
-                className="text-red-500 hover:text-red-700"
+                className="text-[#C49B59] hover:text-red-700"
               >
                 <HiX className="w-4 h-4" />
               </button>

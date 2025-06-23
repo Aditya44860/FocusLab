@@ -16,8 +16,12 @@ const MAX_HOURS = Math.max(...days.map(day => day.hours));
 
   return (
     <div className="w-full h-auto bg-[#F7E5C5] border-2 rounded-2xl border-[#C49B59] p-4 text-center">
-      Weekly Progress 
-      <div className="flex items-end justify-between gap-4 h-64 mt-8 p-4 bg-[#FFF7EA] rounded-lg shadow border">
+
+      <h2 className="text-xl font-semibold text-[#5B4636] flex-1 text-center">
+        Weekly Progress
+      </h2>
+
+      <div className="flex items-end justify-between gap-4 h-68 mt-4 p-4 bg-[#FFF7EA] rounded-lg shadow border border-[#C49B59]">
       {days.map((day, index) => {
         const barHeight = `${(day.hours / MAX_HOURS) * 100}%`;
 

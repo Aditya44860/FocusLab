@@ -21,7 +21,7 @@ const Focus = () => {
           </div>
   
           {/* Grid of Components */}
-          <div className="grid grid-cols-1 [@media(min-width:965px)]:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 [@media(min-width:965px)]:grid-cols-2 gap-6 mb-4">
             <Timer />
             <TodoList />
             <ProgressBar />

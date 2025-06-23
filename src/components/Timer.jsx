@@ -138,7 +138,7 @@ const stopAlarm = () => {
         {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
       </h1>
 
-      <div className="flex bg-[#EFD6B1] mt-7 justify-center items-center mx-10 p-1 rounded-full border-2 border-[#C49B59] text-sm overflow-hidden">
+      <div className="flex bg-[#EFD6B1] mt-7 justify-center items-center mx-auto p-1 rounded-full border-2 border-[#C49B59] text-sm overflow-hidden max-w-lg">
         <button
           className="px-3 py-5 text-[#4C4037] hover:scale-110 transition-all"
           onClick={() => setTimerMode("Pomodoro")}
@@ -161,27 +161,29 @@ const stopAlarm = () => {
         </button>
       </div>
 
-      <div className="mt-12 flex justify-between items-center">
-        <FiSettings
-          className="text-[#4C4037] text-3xl cursor-pointer hover:scale-110 transition-all mx-2 p-0"
-          onClick={() => setShowSettings(true)}
-        />
-        {isActive ? (
-          <FiPause
-            className="text-[#4C4037] text-4xl cursor-pointer hover:scale-110 transition-all"
-            onClick={toggleTimer}
+      <div className="mt-12 flex justify-center items-center">
+        <div className="flex justify-between items-center w-full max-w-xs mx-auto">
+          <FiSettings
+            className="text-[#4C4037] text-3xl cursor-pointer hover:scale-110 transition-all p-0"
+            onClick={() => setShowSettings(true)}
           />
-        ) : (
-          <FiPlay
-            className="text-[#4C4037] text-4xl cursor-pointer hover:scale-110 transition-all ml-1"
-            onClick={toggleTimer}
-          />
-        )}
+          {isActive ? (
+            <FiPause
+              className="text-[#4C4037] text-4xl cursor-pointer hover:scale-110 transition-all"
+              onClick={toggleTimer}
+            />
+          ) : (
+            <FiPlay
+              className="text-[#4C4037] text-4xl cursor-pointer hover:scale-110 transition-all"
+              onClick={toggleTimer}
+            />
+          )}
 
-        <FiRefreshCcw
-          className="text-[#4C4037] text-3xl cursor-pointer hover:rotate-90 transition-all mx-2 p-0"
-          onClick={resetTimer}
-        />
+          <FiRefreshCcw
+            className="text-[#4C4037] text-3xl cursor-pointer hover:rotate-90 transition-all p-0"
+            onClick={resetTimer}
+          />
+        </div>
       </div>
 
       {/* Settings */}

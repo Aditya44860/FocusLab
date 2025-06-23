@@ -12,7 +12,7 @@ const App = () => {
   const router = createBrowserRouter([
     { path: '/', element: <><Navbar/><Home/></>},
     { path: '/Focus', element: <><Navbar/><Focus/></>},
-    { path: '/Groups', element: <><Navbar/><Groups/></>},
+    { path: '/Groups', element: <Groups/>},
     { path: '/Notes', element: <><Navbar/><Notes/></>}
   ])
 
