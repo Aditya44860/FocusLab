@@ -6,6 +6,7 @@ import Focus from './Pages/Focus';
 import Groups from './Pages/Groups';
 import Notes from './Pages/Notes';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AuthProvider } from './Firebase/AuthContext';
 
 const App = () => {
 
@@ -17,9 +18,11 @@ const App = () => {
   ])
 
   return (
-    <div>
-      <RouterProvider router={router}/>
-    </div>
+    <AuthProvider>
+      <div>
+        <RouterProvider router={router}/>
+      </div>
+    </AuthProvider>
   );
 };
 

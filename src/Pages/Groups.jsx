@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FiSend, FiPlus, FiUsers, FiMessageCircle } from 'react-icons/fi';
 import Navbar from '../components/navbar';
+import { useAuth } from '../Firebase/AuthContext';
+import LoginRequired from '../components/LoginRequired';
 
 const initialChats = {
   Python: [
@@ -24,6 +26,7 @@ const initialChats = {
 };
 
 const Groups = () => {
+  const { userLoggedIn } = useAuth();
   const [selectedGroup, setSelectedGroup] = useState('Python');
   const [chats, setChats] = useState(initialChats);
   const [inputText, setInputText] = useState('');
@@ -31,6 +34,8 @@ const Groups = () => {
   const messagesEndRef = useRef(null);
 
   document.title = "FocusLab - Groups";
+
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -186,6 +191,7 @@ const Groups = () => {
 
         </div>
       </div>
+      {!userLoggedIn && <LoginRequired />}
     </div>
   );
 };

@@ -3,8 +3,12 @@ import Timer from '../components/Timer';
 import TodoList from '../components/TodoList';
 import ProgressBar from '../components/progress';
 import Notes from '../components/QuickNotes';
+import { useAuth } from '../Firebase/AuthContext';
+import LoginRequired from '../components/LoginRequired';
 
 const Focus = () => {
+    const { userLoggedIn } = useAuth();
+
     return (
       <div>
         <main className="max-w-5xl mx-auto px-4 py-8">
@@ -28,6 +32,7 @@ const Focus = () => {
             <Notes />
           </div>
         </main>
+        {!userLoggedIn && <LoginRequired />}
       </div>
     );
   };  

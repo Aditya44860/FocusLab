@@ -1,9 +1,19 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
-import { NavLink } from "react-router-dom";
+import { useAuth } from "../Firebase/AuthContext";
+import { doSignInWithGoogle } from "../Firebase/auth";
 
 const Home = () => {
+  const { userLoggedIn } = useAuth();
+
+  const handleGoogleLogin = async () => {
+    try {
+      await doSignInWithGoogle();
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
 
   document.title = "FocusLab"
 
@@ -67,18 +77,25 @@ const Home = () => {
         <img
           src="/assets/pen.png"
           alt="Pen"
-          className="absolute left-[-3rem] sm:left-[-5rem] md:left-[-7rem] bottom-10 w-16 sm:w-24 md:w-32 lg:w-100 mix-blend-darken opacity-10 sm:opacity-15 md:opacity-20"
+          className="absolute left-[-1rem] sm:left-[-2rem] md:left-[-3rem] md:bottom-[2rem] md:rotate-10 lg:left-[-7rem] bottom-[15%] w-34 sm:w-50 md:w-80 lg:w-100 mix-blend-darken opacity-30"
           style={floatFast}
         />
         <img
           src="/assets/coffee.png"
           alt="Coffee"
-          className="absolute right-[-2rem] sm:right-[-3rem] md:right-[-5rem] top-32 w-16 sm:w-24 md:w-32 lg:w-100 mix-blend-darken opacity-10 sm:opacity-15 md:opacity-20 rotate-[-15deg]"
+          className="absolute right-[-1rem] sm:right-[-2rem] md:right-[-3rem] md:top-[2rem] lg:right-[-5rem] top-[20%] w-34 sm:w-52 md:w-60 lg:w-100 mix-blend-darken opacity-30 rotate-[-15deg]"
           style={floatFast}
         />
 
-        <div className="pt-16 sm:pt-24 md:pt-32 lg:pt-40 px-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl text-center">Study Smarter Together</h1>
+        <div className="px-4">
+          <motion.h1 
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl text-center font-bold bg-gradient-to-r from-[#4C4037] via-[#967259] to-[#B77A42] bg-clip-text text-transparent leading-tight pb-2"
+          >
+            Study Smarter Together
+          </motion.h1>
           <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-6xl text-center mt-8 sm:mt-12 md:mt-20 lg:mt-28 min-h-[4.5rem]">
             <Typewriter
               words={["Stay organized.", "Stay accountable.", "Study better."]}
@@ -91,19 +108,17 @@ const Home = () => {
             />
           </h2>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center mt-6 md:mt-9 px-4">
-            <NavLink to="/Focus" className="w-full sm:w-auto">
-              <button className="bg-[#4C4037] text-[#FBF0E3] px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-[0.5rem] mt-8 md:mt-12 lg:mt-16 mr-0 sm:mr-3 transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#4C4037] w-full sm:w-auto">
+          {!userLoggedIn && (
+            <div className="flex justify-center mt-8 lg:hidden">
+              <button 
+                onClick={handleGoogleLogin}
+                className="bg-[#563f2e] text-[#FBF0E3] px-8 py-4 rounded-full font-semibold hover:bg-[#855c3d] transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
                 Get Started
               </button>
-            </NavLink>
+            </div>
+          )}
 
-            <NavLink to="/Groups" className="w-full sm:w-auto">
-              <button className="bg-[#B77A42] text-[#FBF0E3] px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 rounded-[0.5rem] mt-4 sm:mt-8 md:mt-12 lg:mt-16 ml-0 sm:ml-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#624325] w-full sm:w-auto">
-                Login
-              </button>
-            </NavLink>
-          </div>
         </div>
       </div>
 
@@ -361,6 +376,8 @@ const Home = () => {
           </motion.div>
         </motion.div>
       </footer>
+
+
     </div>
   );
 };
