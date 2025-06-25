@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../Firebase/AuthContext";
-import { doSignInWithGoogle, doSignOut } from "../Firebase/auth";
+import { doSignInWithGoogle, doSignOut, handleRedirectResult } from "../Firebase/auth";
 import { FaUserCircle } from "react-icons/fa";
 import ProfilePopup from "./ProfilePopup";
 
@@ -9,6 +9,21 @@ const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const { userLoggedIn, user } = useAuth();
+
+  // Handle redirect result on component mount (for mobile)
+  useEffect(() => {
+    const checkRedirectResult = async () => {
+      try {
+        const result = await handleRedirectResult();
+        if (result) {
+          console.log('Redirect authentication successful');
+        }
+      } catch (error) {
+        console.error('Redirect authentication failed:', error);
+      }
+    };
+    checkRedirectResult();
+  }, []);
 
   const handleGoogleLogin = async () => {
     try {
