@@ -14,20 +14,12 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, initializeUser);
-    return unsubscribe 
+    return onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setUserLoggedIn(!!user);
+      setLoading(false);
+    });
   }, [])
-
-  async function initializeUser(user) {
-    if (user) {
-      setUser(user)
-      setUserLoggedIn(true)
-    } else {
-      setUser(null)
-      setUserLoggedIn(false)
-    }
-    setLoading(false)
-  }
 
   const value = {
     user,

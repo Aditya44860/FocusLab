@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FiSend, FiPlus, FiUsers, FiMessageCircle } from 'react-icons/fi';
+import { FiSend, FiPlus, FiUsers } from 'react-icons/fi';
 import Navbar from '../components/navbar';
 import { useAuth } from '../Firebase/AuthContext';
 import LoginRequired from '../components/LoginRequired';
@@ -47,17 +47,14 @@ const Groups = () => {
 
   const handleSend = () => {
     if (!inputText.trim()) return;
-
-    const newMessage = {
-      sender: 'You',
-      text: inputText,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      isMe: true
-    };
-
     setChats(prev => ({
       ...prev,
-      [selectedGroup]: [...prev[selectedGroup], newMessage]
+      [selectedGroup]: [...prev[selectedGroup], {
+        sender: 'You',
+        text: inputText,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isMe: true
+      }]
     }));
     setInputText('');
   };
@@ -65,19 +62,10 @@ const Groups = () => {
   const addGroup = () => {
     const groupName = `Study Group ${groupCount}`;
     setGroupCount(prev => prev + 1);
-    setChats(prev => ({
-      ...prev,
-      [groupName]: [
-        { sender: 'System', text: 'Welcome to the group!', time: 'now', isMe: false }
-      ]
-    }));
+    setChats(prev => ({ ...prev, [groupName]: [{ sender: 'System', text: 'Welcome to the group!', time: 'now', isMe: false }] }));
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSend();
-    }
-  };
+  const handleKeyPress = (e) => e.key === 'Enter' && handleSend();
 
   return (
     <div className="bg-[#E9CA9F] min-h-screen overflow-hidden">

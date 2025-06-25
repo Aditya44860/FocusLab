@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../Firebase/AuthContext";
-import { doSignInWithGoogle, doSignOut, handleRedirectResult } from "../Firebase/auth";
+import { doSignInWithGoogle, doSignOut } from "../Firebase/auth";
 import { FaUserCircle } from "react-icons/fa";
 import ProfilePopup from "./ProfilePopup";
 
@@ -10,45 +10,15 @@ const Nav = () => {
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const { userLoggedIn, user } = useAuth();
 
-  // Handle redirect result on component mount (for mobile)
-  useEffect(() => {
-    const checkRedirectResult = async () => {
-      try {
-        const result = await handleRedirectResult();
-        if (result) {
-          console.log('Redirect authentication successful');
-        }
-      } catch (error) {
-        console.error('Redirect authentication failed:', error);
-      }
-    };
-    checkRedirectResult();
-  }, []);
+  const handleGoogleLogin = () => doSignInWithGoogle().catch(console.error);
 
-  const handleGoogleLogin = async () => {
-    try {
-      await doSignInWithGoogle();
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
+  const handleSignOut = () => {
+    doSignOut().catch(console.error);
+    setShowProfilePopup(false);
   };
 
-  const handleSignOut = async () => {
-    try {
-      await doSignOut();
-      setShowProfilePopup(false);
-    } catch (error) {
-      console.error('Sign out failed:', error);
-    }
-  };
-
-  const toggleProfilePopup = () => {
-    setShowProfilePopup(!showProfilePopup);
-  };
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleProfilePopup = () => setShowProfilePopup(!showProfilePopup);
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
     <div>

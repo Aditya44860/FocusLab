@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from './components/navbar';
 import Home from './Pages/Home'
@@ -8,22 +7,17 @@ import Notes from './Pages/Notes';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './Firebase/AuthContext';
 
-const App = () => {
+const router = createBrowserRouter([
+  { path: '/', element: <><Navbar/><Home/></> },
+  { path: '/Focus', element: <><Navbar/><Focus/></> },
+  { path: '/Groups', element: <Groups/> },
+  { path: '/Notes', element: <><Navbar/><Notes/></> }
+]);
 
-  const router = createBrowserRouter([
-    { path: '/', element: <><Navbar/><Home/></>},
-    { path: '/Focus', element: <><Navbar/><Focus/></>},
-    { path: '/Groups', element: <Groups/>},
-    { path: '/Notes', element: <><Navbar/><Notes/></>}
-  ])
-
-  return (
-    <AuthProvider>
-      <div>
-        <RouterProvider router={router}/>
-      </div>
-    </AuthProvider>
-  );
-};
+const App = () => (
+  <AuthProvider>
+    <RouterProvider router={router}/>
+  </AuthProvider>
+);
 
 export default App;
