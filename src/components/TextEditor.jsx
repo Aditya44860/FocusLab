@@ -52,7 +52,7 @@ const TextEditor = ({ content, onChange, title }) => {
   }, [])
 
   return (
-    <div style={{ fontFamily: 'Poppins, sans-serif' }} className="w-full max-h-screen bg-white rounded-lg overflow-hidden mt-[3%]">
+    <div style={{ fontFamily: 'Poppins, sans-serif' }} className="w-full max-h-screen bg-[#F7E5C5] rounded-2xl overflow-hidden mt-[3%] border-2 border-[#C49B59]">
       <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet' />
       <style>{`
         #content a {
@@ -73,10 +73,10 @@ const TextEditor = ({ content, onChange, title }) => {
           margin-left: 0;
         }
       `}</style>
-      <div className="p-4 bg-gray-200">
-        <div className="flex gap-2 mb-4 flex-wrap">
+      <div className="p-4 bg-[#967259]">
+        <div className="flex gap-2 mb-4 flex-wrap justify-center">
           
-          <select onChange={(e) => { formatDoc('formatBlock', e.target.value); e.target.selectedIndex = 0 }} className="bg-white border-2 border-gray-300 rounded outline-none cursor-pointer">
+          <select onChange={(e) => { formatDoc('formatBlock', e.target.value); e.target.selectedIndex = 0 }} className="text-glow border-2 border-[#ad8340] rounded outline-none cursor-pointer">
             <option value="" disabled>Format</option>
             <option value="h1">Heading 1</option>
             <option value="h2">Heading 2</option>
@@ -86,7 +86,7 @@ const TextEditor = ({ content, onChange, title }) => {
             <option value="h6">Heading 6</option>
             <option value="p">Paragraph</option>
           </select>
-          <select onChange={(e) => { formatDoc('fontSize', e.target.value); e.target.selectedIndex = 0 }} className="bg-white border-2 border-gray-300 rounded outline-none cursor-pointer">
+          <select onChange={(e) => { formatDoc('fontSize', e.target.value); e.target.selectedIndex = 0 }} className="text-glow border-2 border-[#ad8340] rounded outline-none cursor-pointer">
             <option value="" disabled>Font size</option>
             <option value="1">Extra small</option>
             <option value="2">Small</option>
@@ -96,29 +96,29 @@ const TextEditor = ({ content, onChange, title }) => {
             <option value="6">Extra Large</option>
             <option value="7">Big</option>
           </select>
-          <div className="bg-white border-2 border-gray-300 rounded flex items-center gap-1 px-2 cursor-pointer">
+          <div className="text-glow border-2 border-[#ad8340] rounded flex items-center gap-1 px-2 cursor-pointer">
             <span className="text-sm">Color</span>
             <input type="color" onChange={(e) => { formatDoc('foreColor', e.target.value); e.target.value = '#000000' }} className="border-none w-6 h-6 cursor-pointer" />
           </div>
-          <div className="bg-white border-2 border-gray-300 rounded flex items-center gap-1 px-2 cursor-pointer">
+          <div className="text-glow border-2 border-[#ad8340] rounded flex items-center gap-1 px-2 cursor-pointer">
             <span className="text-sm">Background</span>
             <input type="color" onChange={(e) => { formatDoc('hiliteColor', e.target.value); e.target.value = '#000000' }} className="border-none w-6 h-6 cursor-pointer" />
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <button onClick={() => formatDoc('undo')} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-undo'></i></button>
-          <button onClick={() => formatDoc('redo')} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-redo'></i></button>
-          <button onClick={() => formatDoc('bold')} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-bold'></i></button>
-          <button onClick={() => formatDoc('underline')} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-underline'></i></button>
-          <button onClick={() => formatDoc('italic')} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-italic'></i></button>
-          <button onClick={() => formatDoc('strikeThrough')} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-strikethrough'></i></button>
-          <button onClick={() => formatDoc('justifyLeft')} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-align-left'></i></button>
-          <button onClick={() => formatDoc('justifyCenter')} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-align-middle'></i></button>
-          <button onClick={() => formatDoc('justifyRight')} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-align-right'></i></button>
-          <button onClick={() => formatDoc('insertOrderedList', false, null)} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-list-ol'></i></button>
-          <button onClick={() => formatDoc('insertUnorderedList', false, null)} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-list-ul'></i></button>
-          <button onClick={addLink} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-link'></i></button>
-          <button onClick={() => formatDoc('unlink')} className="bg-white border-2 border-gray-300 rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-unlink'></i></button>
+        <div className="flex flex-wrap items-center gap-2 justify-center">
+          <button onClick={() => formatDoc('undo')} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-undo'></i></button>
+          <button onClick={() => formatDoc('redo')} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-redo'></i></button>
+          <button onClick={() => formatDoc('bold')} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-bold'></i></button>
+          <button onClick={() => formatDoc('underline')} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-underline'></i></button>
+          <button onClick={() => formatDoc('italic')} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-italic'></i></button>
+          <button onClick={() => formatDoc('strikeThrough')} className= "button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-strikethrough'></i></button>
+          <button onClick={() => formatDoc('justifyLeft')} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-align-left'></i></button>
+          <button onClick={() => formatDoc('justifyCenter')} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-align-middle'></i></button>
+          <button onClick={() => formatDoc('justifyRight')} className= "button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-align-right'></i></button>
+          <button onClick={() => formatDoc('insertOrderedList', false, null)} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-list-ol'></i></button>
+          <button onClick={() => formatDoc('insertUnorderedList', false, null)} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-list-ul'></i></button>
+          <button onClick={addLink} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-link'></i></button>
+          <button onClick={() => formatDoc('unlink')} className="button-glow border-2 border-[#C49B59] rounded cursor-pointer w-10 h-10 flex items-center justify-center text-lg hover:bg-gray-100"><i className='bx bx-unlink'></i></button>
           
         </div>
       </div>
@@ -128,8 +128,8 @@ const TextEditor = ({ content, onChange, title }) => {
         contentEditable="true" 
         spellCheck="false"
         onInput={handleContentChange}
-        className="w-full h-[calc(100vh-200px)] p-4  rounded-lg resize-none focus:outline-none focus:border-[#B6825E] bg-white text-[#4C4037] overflow-scroll"
-        style={{ maxHeight: '60vh', fontSize: '16px', lineHeight: '1.6' }}
+        className="w-full h-[calc(100vh-200px)] p-4  rounded-lg resize-none focus:outline-none focus:border-[#B6825E] bg-[#fff3ded2] text-[#4C4037] overflow-scroll"
+        style={{ maxHeight: '55vh', fontSize: '16px', lineHeight: '1.6' }}
         suppressContentEditableWarning={true}
       >
         

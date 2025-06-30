@@ -132,59 +132,63 @@ const Notes = () => {
   if (selectedDoc) {
     return (
       <div className="bg-[#E9CA9F] min-h-screen">
-        <div className="bg-[#F7E5C5] p-4 border-b-4 border-[#C49B59] flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="bg-[#F7E5C5] p-2 md:p-4 border-b-2 md:border-b-4 border-[#C49B59] flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
             <button
               onClick={goBackToList}
-              className="bg-[#B6825E] text-white p-2 rounded-lg hover:bg-[#967259] transition-colors"
+              className="bg-[#B6825E] text-white p-2 rounded-lg hover:bg-[#967259] transition-colors flex-shrink-0"
             >
-              <FiArrowLeft size={20} />
+              <FiArrowLeft size={16} className="md:w-5 md:h-5" />
             </button>
-            <h2 className="text-xl font-semibold text-[#4C4037]">{selectedDoc.title}</h2>
+            <h2 className="text-sm md:text-xl font-semibold text-[#4C4037] truncate">{selectedDoc.title}</h2>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
             <button
               onClick={saveDocument}
               disabled={saving}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+              className="bg-green-600 text-white px-2 md:px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-1 md:gap-2 text-xs md:text-base"
             >
-              <FiSave size={16} />
-              {saving ? 'Saving...' : saved ? 'Saved!' : 'Save'}
+              <FiSave size={14} className="md:w-4 md:h-4" />
+              <span className="hidden md:inline">{saving ? 'Saving...' : saved ? 'Saved!' : 'Save'}</span>
+              <span className="md:hidden">{saving ? '...' : saved ? '✓' : 'Save'}</span>
             </button>
             <button
               onClick={() => deleteDocument(selectedDoc.id)}
               className="text-red-500 hover:text-red-700 transition-colors p-2"
             >
-              <FiTrash2 size={20} />
+              <FiTrash2 size={14} className="md:w-5 md:h-5" />
             </button>
           </div>
         </div>
-        <div className="p-6">
-          <TextEditor 
-            content={content}
-            onChange={setContent}
-            title={selectedDoc.title}
-          />
+        <div className="p-2 md:p-6 flex justify-center">
+          <div className="w-full max-w-7xl">
+            <TextEditor 
+              content={content}
+              onChange={setContent}
+              title={selectedDoc.title}
+            />
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-[#E9CA9F] min-h-screen py-8">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="bg-[#F7E5C5] rounded-2xl shadow-lg p-8 border-4 border-[#C49B59]">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold text-[#4C4037]" style={{ fontFamily: "Orbitron, sans-serif" }}>
+    <div className="bg-[#E9CA9F] min-h-screen py-4 md:py-8">
+      <div className="max-w-6xl mx-auto px-2 md:px-4">
+        <div className="bg-[#F7E5C5] rounded-2xl shadow-lg p-4 md:p-8 border-2 md:border-4 border-[#C49B59]">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-4 md:mb-8 gap-4">
+            <h1 className="text-2xl md:text-4xl font-bold text-[#4C4037] text-center sm:text-left" style={{ fontFamily: "Orbitron, sans-serif" }}>
               My Notes
             </h1>
             <button
               onClick={createNewDoc}
-              className="bg-[#B6825E] text-white px-6 py-3 rounded-lg hover:bg-[#967259] transition-colors flex items-center gap-2 font-semibold"
+              className="bg-[#B6825E] text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-[#967259] transition-colors flex items-center gap-2 font-semibold text-sm md:text-base"
             >
-              <FiPlus size={20} />
-              New Document
+              <FiPlus size={16} className="md:w-5 md:h-5" />
+              <span className="hidden sm:inline">New Document</span>
+              <span className="sm:hidden">New</span>
             </button>
           </div>
 
@@ -199,9 +203,9 @@ const Notes = () => {
               <p className="text-[#967259] mb-6">Create your first Google Doc to get started</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {docs.map((document) => (
-                <div key={document.id} className="bg-white rounded-lg p-6 shadow-md border-2 border-[#E9CA9F] hover:shadow-lg transition-shadow">
+                <div key={document.id} className="bg-white rounded-lg p-4 md:p-6 shadow-md border-2 border-[#E9CA9F] hover:shadow-lg transition-shadow">
                   <div className="flex items-start justify-between mb-4">
                     <FiFileText size={24} className="text-[#B6825E] flex-shrink-0" />
                     <button
@@ -212,20 +216,21 @@ const Notes = () => {
                     </button>
                   </div>
                   
-                  <h3 className="font-semibold text-[#4C4037] mb-2 line-clamp-2">
+                  <h3 className="font-semibold text-[#4C4037] mb-2 line-clamp-2 text-sm md:text-base">
                     {document.title}
                   </h3>
                   
-                  <p className="text-sm text-[#967259] mb-4">
+                  <p className="text-xs md:text-sm text-[#967259] mb-3 md:mb-4">
                     Created: {document.createdAt?.toDate?.()?.toLocaleDateString() || 'Unknown'}
                   </p>
                   
                   <button
                     onClick={() => openDocument(document)}
-                    className="w-full bg-[#4C4037] text-white py-2 px-4 rounded-lg hover:bg-[#3a2f26] transition-colors flex items-center justify-center gap-2"
+                    className="w-full bg-[#4C4037] text-white py-2 px-3 md:px-4 rounded-lg hover:bg-[#3a2f26] transition-colors flex items-center justify-center gap-2 text-sm md:text-base"
                   >
-                    <FiEdit3 size={16} />
-                    Edit Note
+                    <FiEdit3 size={14} className="md:w-4 md:h-4" />
+                    <span className="hidden sm:inline">Edit Note</span>
+                    <span className="sm:hidden">Edit</span>
                   </button>
                 </div>
               ))}
