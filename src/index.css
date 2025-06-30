@@ -67,5 +67,11 @@ html, body {
 }
 .threeD:hover{
   text-shadow: 1px 1px 8px rgba(106, 63, 23, 0.494);
-  
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
