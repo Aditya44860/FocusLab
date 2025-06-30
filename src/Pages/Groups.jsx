@@ -95,18 +95,18 @@ const Groups = () => {
           <FiPlus size={20} />
         </button>
       </div>
-      <div className="flex-1 overflow-y-auto bg-[#F7E5C5]">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[#F7E5C5]">
         {Object.keys(chats).map((group) => (
           <div
             key={group}
             onClick={() => selectGroup(group)}
             className="flex items-center gap-4 p-4 border-b border-[#C49B59] cursor-pointer hover:bg-[#EFD6B1]"
           >
-            <div className="w-12 h-12 bg-[#B77A42] rounded-full flex items-center justify-center text-white">
+            <div className="w-12 h-12 bg-[#B77A42] rounded-full flex items-center justify-center text-white flex-shrink-0">
               <FiUsers size={18} />
             </div>
-            <div className="flex-1">
-              <h3 className="text-[#4C4037] font-semibold">{group}</h3>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-[#4C4037] font-semibold truncate">{group}</h3>
               <p className="text-sm text-[#7B5B44] truncate">
                 {chats[group][chats[group].length - 1]?.text || 'No messages'}
               </p>
