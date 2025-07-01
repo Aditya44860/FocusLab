@@ -14,6 +14,9 @@ const Notes = () => {
   const [content, setContent] = useState('')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [originalContent, setOriginalContent] = useState('')
+  const [showWarning, setShowWarning] = useState(false)
 
   document.title = "FocusLab - Notes"
 
@@ -100,12 +103,30 @@ const Notes = () => {
 
   const openDocument = (document) => {
     setSelectedDoc(document)
-    setContent(document.content || '')
+    const docContent = document.content || ''
+    setContent(docContent)
+    setOriginalContent(docContent)
+    setHasUnsavedChanges(false)
   }
 
   const goBackToList = () => {
+    if (hasUnsavedChanges) {
+      setShowWarning(true)
+    } else {
+      setSelectedDoc(null)
+      setContent('')
+    }
+  }
+
+  const handleYes = () => {
     setSelectedDoc(null)
     setContent('')
+    setHasUnsavedChanges(false)
+    setShowWarning(false)
+  }
+
+  const handleNo = () => {
+    setShowWarning(false)
   }
 
   const saveDocument = async () => {
@@ -119,6 +140,8 @@ const Notes = () => {
       })
       fetchDocs()
       setSaved(true)
+      setHasUnsavedChanges(false)
+      setOriginalContent(content)
       setTimeout(() => setSaved(false), 2000)
     } catch (error) {
       console.error('Error saving document:', error)
@@ -165,11 +188,36 @@ const Notes = () => {
           <div className="w-full max-w-7xl">
             <TextEditor 
               content={content}
-              onChange={setContent}
+              onChange={(newContent) => {
+                setContent(newContent)
+                setHasUnsavedChanges(newContent !== originalContent)
+              }}
               title={selectedDoc.title}
             />
           </div>
         </div>
+        {showWarning && (
+          <div className="fixed inset-0 bg-black/85 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-4">
+              <h3 className="text-lg font-semibold text-[#4C4037] mb-4">Unsaved Changes</h3>
+              <p className="text-[#967259] mb-6">You have unsaved changes. Do you want to go back without saving?</p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={handleNo}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors"
+                >
+                  No
+                </button>
+                <button
+                  onClick={handleYes}
+                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                >
+                  Yes
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   }

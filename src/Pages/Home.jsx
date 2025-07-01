@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
 import { useAuth } from "../Firebase/AuthContext";
 import { doSignInWithGoogle } from "../Firebase/auth";
+import { FiCalendar, FiCheckSquare, FiClock, FiWatch } from "react-icons/fi";
 
 const Home = () => {
   const { userLoggedIn } = useAuth();
@@ -345,7 +346,7 @@ const Home = () => {
             animate="animate"
             className="rounded-2xl border-2 border-[#d3ac77] p-3 sm:p-4"
           >
-            Calender
+            <FiCalendar size={32} />
           </motion.div>
 
           <motion.div
@@ -354,7 +355,7 @@ const Home = () => {
             animate="animate"
             className="rounded-2xl border-2 border-[#d3ac77] p-3 sm:p-4"
           >
-            To-Do
+            <FiCheckSquare size={32} />
           </motion.div>
 
           <motion.div
@@ -363,7 +364,7 @@ const Home = () => {
             animate="animate"
             className="rounded-2xl border-2 border-[#d3ac77] p-3 sm:p-4"
           >
-            Timer
+            <FiClock size={32} />
           </motion.div>
 
           <motion.div
@@ -372,7 +373,7 @@ const Home = () => {
             animate="animate"
             className="rounded-2xl border-2 border-[#d3ac77] p-3 sm:p-4"
           >
-            Clock
+            <FiWatch size={32} />
           </motion.div>
         </motion.div>
       </footer>
