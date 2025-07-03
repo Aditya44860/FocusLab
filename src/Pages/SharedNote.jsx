@@ -62,7 +62,7 @@ const SharedNote = () => {
           
           <div className="bg-white p-6 rounded-lg border border-[#E9CA9F] min-h-96 max-h-160 overflow-y-auto">
             <div 
-              className="text-[#4C4037] prose max-w-none [&_a]:text-blue-600 [&_a]:underline [&_a:hover]:text-blue-800"
+              className="text-[#4C4037] prose max-w-none [&_a]:text-blue-600 [&_a]:underline [&_a:hover]:text-blue-800 [&_ul]:list-disc [&_ul]:ml-6 [&_ol]:list-decimal [&_ol]:ml-6 [&_li]:mb-1"
               style={{
                 fontFamily: 'inherit',
                 lineHeight: '1.6',
