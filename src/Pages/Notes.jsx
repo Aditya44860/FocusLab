@@ -18,6 +18,8 @@ const Notes = () => {
   const [saved, setSaved] = useState(false)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [showWarning, setShowWarning] = useState(false)
+  const [editingTitle, setEditingTitle] = useState(false)
+  const [newTitle, setNewTitle] = useState('')
 
 
   document.title = "FocusLab - Notes"
@@ -87,6 +89,7 @@ const Notes = () => {
   const openDocument = (document) => {
     setSelectedDoc(document)
     setContent(document.content || '')
+    setNewTitle(document.title)
     setHasUnsavedChanges(false)
   }
 
@@ -116,9 +119,11 @@ const Notes = () => {
     setSaving(true)
     try {
       await updateDoc(doc(db, 'notes', selectedDoc.id), {
+        title: newTitle,
         content: content,
         lastModified: new Date()
       })
+      setSelectedDoc({...selectedDoc, title: newTitle})
       fetchDocs()
       setSaved(true)
       setHasUnsavedChanges(false)
@@ -143,7 +148,32 @@ const Notes = () => {
             >
               <FiArrowLeft size={16} className="md:w-5 md:h-5" />
             </button>
-            <h2 className="text-sm md:text-xl font-semibold text-[#4C4037] truncate">{selectedDoc.title}</h2>
+            {editingTitle ? (
+              <input
+                type="text"
+                value={newTitle}
+                onChange={(e) => {
+                  setNewTitle(e.target.value)
+                  setHasUnsavedChanges(true)
+                }}
+                onBlur={() => setEditingTitle(false)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setEditingTitle(false)
+                  }
+                }}
+                className="text-sm md:text-xl font-semibold text-[#4C4037] bg-transparent border-b-2 border-[#C49B59] outline-none flex-1 min-w-0"
+                autoFocus
+              />
+            ) : (
+              <h2 
+                className="text-sm md:text-xl font-semibold text-[#4C4037] truncate cursor-pointer hover:text-[#967259] transition-colors"
+                onClick={() => setEditingTitle(true)}
+                title="Click to edit title"
+              >
+                {newTitle}
+              </h2>
+            )}
           </div>
           
           <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
