@@ -60,10 +60,16 @@ const SharedNote = () => {
             <h1 className="text-3xl font-bold text-[#4C4037]">{note.title}</h1>
           </div>
           
-          <div className="bg-white p-6 rounded-lg border border-[#E9CA9F] min-h-96">
-            <div className="text-[#4C4037] whitespace-pre-wrap">
-              {note.content || 'This note is empty.'}
-            </div>
+          <div className="bg-white p-6 rounded-lg border border-[#E9CA9F] min-h-96 max-h-160 overflow-y-auto">
+            <div 
+              className="text-[#4C4037] prose max-w-none [&_a]:text-blue-600 [&_a]:underline [&_a:hover]:text-blue-800"
+              style={{
+                fontFamily: 'inherit',
+                lineHeight: '1.6',
+                wordBreak: 'break-word'
+              }}
+              dangerouslySetInnerHTML={{ __html: note.content || 'This note is empty.' }}
+            />
           </div>
           
           <p className="text-sm text-[#967259] mt-4 text-center">
