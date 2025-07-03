@@ -5,6 +5,7 @@ import TextEditor from '../components/TextEditor'
 import { db } from '../Firebase/Firebase'
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore'
 import { FiPlus, FiArrowLeft, FiTrash2, FiFileText, FiSave, FiEdit3 } from 'react-icons/fi'
+import ShareButton from '../components/ShareButton'
 
 
 const Notes = () => {
@@ -129,6 +130,8 @@ const Notes = () => {
     }
   }
 
+
+
   if (selectedDoc) {
     return (
       <div className="bg-[#E9CA9F] min-h-screen">
@@ -153,6 +156,12 @@ const Notes = () => {
               <span className="hidden md:inline">{saving ? 'Saving...' : saved ? 'Saved!' : 'Save'}</span>
               <span className="md:hidden">{saving ? '...' : saved ? '✓' : 'Save'}</span>
             </button>
+
+            <ShareButton 
+              noteTitle={selectedDoc.title}
+              noteContent={content}
+              userId={user.uid}
+            />
 
             <button
               onClick={() => deleteDocument(selectedDoc.id)}
