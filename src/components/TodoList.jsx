@@ -1,26 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"
 import { HiX, HiPlus } from "react-icons/hi"
+import { useAuth } from '../Firebase/AuthContext'
+import { getUserData, updateUserTodos } from '../Firebase/userDataService'
 
 const TodoList = () => {
-  const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState("");
+  const { user, userLoggedIn } = useAuth()
+  const [tasks, setTasks] = useState([])
+  const [newTask, setNewTask] = useState("")
+
+  useEffect(() => {
+    if (userLoggedIn && user) {
+      getUserData(user.uid).then(data => setTasks(data.todos || []))
+    }
+  }, [userLoggedIn, user])
+
+  const saveTasks = async (newTasks) => {
+    setTasks(newTasks)
+    if (userLoggedIn && user) {
+      await updateUserTodos(user.uid, newTasks)
+    }
+  }
 
   const addTask = () => {
-    if (newTask.trim() !== "") {
-      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
-      setNewTask("");
+    if (newTask.trim()) {
+      const newTasks = [...tasks, { id: Date.now(), text: newTask, completed: false }]
+      saveTasks(newTasks)
+      setNewTask("")
     }
-  };
+  }
 
-  const removeTask = (taskId) => {
-    setTasks(tasks.filter(task => task.id !== taskId));
-  };
+  const removeTask = (taskId) => saveTasks(tasks.filter(task => task.id !== taskId))
 
-  const toggleComplete = (taskId) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId ? { ...task, completed: !task.completed } : task
-    ));
-  };
+  const toggleComplete = (taskId) => saveTasks(tasks.map(task => 
+    task.id === taskId ? { ...task, completed: !task.completed } : task
+  ))
 
   return (
     <div className="w-full h-auto bg-[#F7E5C5] border-2 rounded-2xl border-[#C49B59] p-4 pb-0">

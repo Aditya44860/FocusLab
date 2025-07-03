@@ -8,67 +8,33 @@ import { FiCalendar, FiCheckSquare, FiClock, FiWatch } from "react-icons/fi";
 const Home = () => {
   const { userLoggedIn } = useAuth();
 
-  const handleGoogleLogin = async () => {
-    try {
-      await doSignInWithGoogle();
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
-  };
+  const handleGoogleLogin = () => doSignInWithGoogle().catch(console.error);
 
   document.title = "FocusLab"
 
-  // background floats
-  const floatStyle = {
-    animation: "float 6s ease-in-out infinite",
-  };
-  const floatSlow = {
-    animation: "floatSlow 9s ease-in-out infinite",
-  };
-  const floatFast = {
-    animation: "floatFast 4s ease-in-out infinite",
-  };
+  const floatStyle = { animation: "float 6s ease-in-out infinite" };
+  const floatSlow = { animation: "floatSlow 9s ease-in-out infinite" };
+  const floatFast = { animation: "floatFast 4s ease-in-out infinite" };
 
-  // Animation presets
   const fadeUp = {
     hidden: { y: 60, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.6, ease: "easeInOut" },
-    },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.6 } }
   };
-
   const slideLeft = {
     hidden: { x: -60, opacity: 0 },
-    visible: {
-      x: 0,
-      opacity: 1,
-      transition: { duration: 1, ease: "easeInOut" },
-    },
+    visible: { x: 0, opacity: 1, transition: { duration: 1 } }
   };
-
   const slideRight = {
     hidden: { x: 60, opacity: 0 },
-    visible: {
-      x: 0,
-      opacity: 1,
-      transition: { duration: 1, ease: "easeInOut" },
-    },
+    visible: { x: 0, opacity: 1, transition: { duration: 1 } }
   };
 
   const jumping = (delay = 0) => ({
     initial: { y: 0 },
     animate: {
       y: [10, -10, 10],
-      transition: {
-        duration: 2,
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "loop",
-        delay,
-      },
-    },
+      transition: { duration: 2, repeat: Infinity, delay }
+    }
   });
 
   return (

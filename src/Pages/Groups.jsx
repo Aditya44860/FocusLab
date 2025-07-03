@@ -36,11 +36,7 @@ const Groups = () => {
 
   document.title = "FocusLab - Groups";
 
-
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   useEffect(() => {
     scrollToBottom();
@@ -70,11 +66,7 @@ const Groups = () => {
     setSelectedGroup(group);
     setShowChat(true);
   };
-
-  const goBackToList = () => {
-    setShowChat(false);
-  };
-
+  const goBackToList = () => setShowChat(false);
   const handleKeyPress = (e) => e.key === 'Enter' && handleSend();
 
   return (

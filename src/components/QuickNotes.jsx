@@ -1,30 +1,39 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FiPlus, FiBold } from 'react-icons/fi'; 
+import React, { useState, useEffect, useRef } from 'react'
+import { FiPlus } from 'react-icons/fi'
+import { useAuth } from '../Firebase/AuthContext'
+import { getUserData, updateUserNotes } from '../Firebase/userDataService' 
 
 const Notes = () => {
-  const [note, setNote] = useState('');
-  const textareaRef = useRef(null);
+  const { user, userLoggedIn } = useAuth()
+  const [note, setNote] = useState('')
+  const textareaRef = useRef(null)
 
   useEffect(() => {
-    const savedNote = localStorage.getItem('quickNote');
-    if (savedNote) setNote(savedNote);
-  }, []);
+    if (userLoggedIn && user) {
+      getUserData(user.uid).then(data => setNote(data.quickNotes || ''))
+    } else {
+      const savedNote = localStorage.getItem('quickNote')
+      if (savedNote) setNote(savedNote)
+    }
+  }, [userLoggedIn, user])
 
   useEffect(() => {
-    localStorage.setItem('quickNote', note);
-  }, [note]);
+    if (userLoggedIn && user) {
+      const timeoutId = setTimeout(() => {
+        updateUserNotes(user.uid, note)
+      }, 1000)
+      return () => clearTimeout(timeoutId)
+    } else {
+      localStorage.setItem('quickNote', note)
+    }
+  }, [note, userLoggedIn, user])
 
   const insertBullet = () => {
     const textarea = textareaRef.current;
     const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
     const bullet = '✩ ';
-
-    const updatedNote =
-      note.substring(0, start) + bullet + note.substring(end);
-
+    const updatedNote = note.substring(0, start) + bullet + note.substring(textarea.selectionEnd);
     setNote(updatedNote);
-
     setTimeout(() => {
       textarea.selectionStart = textarea.selectionEnd = start + bullet.length;
       textarea.focus();
@@ -54,9 +63,13 @@ const Notes = () => {
       />
       <div className="flex justify-center p-0 mb-1">
         <button
-          onClick={() => setNote('')} 
+          onClick={() => {
+            setNote('')
+            if (userLoggedIn && user) {
+              updateUserNotes(user.uid, '')
+            }
+          }} 
           className="text-[#5B4636] hover:text-red-500 transition"
-          aria-label="Clear note"
         >
           Clear
         </button>

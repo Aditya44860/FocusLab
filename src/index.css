@@ -9,45 +9,27 @@ html, body {
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
+  0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
 }
 @keyframes floatSlow {
-  0% { transform: translateY(0px); }
+  0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-6px); }
-  100% { transform: translateY(0px); }
 }
 @keyframes floatFast {
-  0% { transform: translateY(0px); }
+  0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-14px); }
-  100% { transform: translateY(0px); }
 }
 
-.text-hover-glow:hover{
-  color: #ffffff;
-  text-shadow: 0 0 5px rgba(251, 240, 227, 0.5);
-}
-
-.text-glow{
-  text-shadow: 0 0 5px rgba(251, 240, 227, 0.5);
-}
-
-.button-glow {
-  text-shadow: 
-    0 0 5px rgba(255, 238, 213, 0.8),
-    0 0 10px rgba(255, 238, 213, 0.7),
-    0 0 15px rgba(255, 238, 213, 0.6),
-    0 0 20px rgba(255, 238, 213, 0.5);
-}
-
+.text-hover-glow:hover { color: #ffffff; text-shadow: 0 0 5px rgba(251, 240, 227, 0.5); }
+.text-glow { text-shadow: 0 0 5px rgba(251, 240, 227, 0.5); }
+.button-glow { text-shadow: 0 0 5px rgba(255, 238, 213, 0.8), 0 0 10px rgba(255, 238, 213, 0.7), 0 0 15px rgba(255, 238, 213, 0.6), 0 0 20px rgba(255, 238, 213, 0.5); }
 
 .logo-heading {
   color: #FBF0E3;
   position: relative;
   transition: all 0.3s ease-in-out;
 }
-
 .logo-heading::after {
   content: '';
   position: absolute;
@@ -60,21 +42,9 @@ html, body {
   transform-origin: left;
   transition: transform 0.3s ease;
 }
+.logo-heading:hover::after { transform: scaleX(1); }
+.logo-heading:hover { color: #ffffff; text-shadow: 0 0 5px rgba(251, 240, 227, 0.5); }
 
-.logo-heading:hover::after {
-  transform: scaleX(1);
-}
-
-.logo-heading:hover {
-  color: #ffffff;
-  text-shadow: 0 0 5px rgba(251, 240, 227, 0.5);
-}
-
-.threeD{
-  transition: text-shadow 0.2s ease;
-  transition-delay: 0.3;
-}
-.threeD:hover{
-  text-shadow: 1px 1px 8px rgba(106, 63, 23, 0.494);
-}
+.threeD { transition: text-shadow 0.2s ease 0.3s; }
+.threeD:hover { text-shadow: 1px 1px 8px rgba(106, 63, 23, 0.494); }
 

@@ -1,14 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FiSettings, FiRefreshCcw, FiPlay, FiPause } from "react-icons/fi";
-import { useLocation } from "react-router-dom";
+import { useAuth } from '../Firebase/AuthContext';
+import { addTimerSession } from '../Firebase/userDataService';
 
 const Timer = () => {
+  const { user, userLoggedIn } = useAuth();
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState("Pomodoro");
   const [showSettings, setShowSettings] = useState(false);
   const [alarmPlaying, setAlarmPlaying] = useState(false);
+  const [sessionStart, setSessionStart] = useState(null);
+  const [focusedTime, setFocusedTime] = useState(0);
+  const [timerStart, setTimerStart] = useState(null);
+  const [initialDuration, setInitialDuration] = useState(0);
 
   const [defaults, setDefaults] = useState({
     Pomodoro: { min: 25, sec: 0 },
@@ -19,52 +25,86 @@ const Timer = () => {
   const timeoutRef = useRef(null);
   const alarmRef = useRef(null);
 
-  const toggleTimer = () => setIsActive((prev) => !prev);
-
-  // timer logic
-  useEffect(() => {
-    if (isActive) {
-      timeoutRef.current = setTimeout(() => {
-        if (seconds > 0) {
-          setSeconds((prev) => prev - 1);
-        } else if (minutes > 0) {
-          setMinutes((prev) => prev - 1);
-          setSeconds(59);
-        } else {
-          clearTimeout(timeoutRef.current);
-          setIsActive(false);
-          setAlarmPlaying(true); // alarm 
-          alarmRef.current.play();      
+  const toggleTimer = () => {
+    setIsActive((prev) => {
+      if (!prev) {
+        setSessionStart(Date.now());
+        setTimerStart(Date.now());
+        setInitialDuration(minutes * 60 + seconds);
+      } else {
+        if (sessionStart) {
+          const sessionDuration = Math.round((Date.now() - sessionStart) / 60000);
+          if (sessionDuration >= 1) {
+            setFocusedTime((prev) => prev + sessionDuration);
+          }
+          setSessionStart(null);
         }
-      }, 1000);
-    } else {
-      clearTimeout(timeoutRef.current);
-    }
-    return () => clearTimeout(timeoutRef.current);
-  }, [isActive, seconds, minutes]);
+        setTimerStart(null);
+      }
+      return !prev;
+    });
+  };
 
-  // updating the document title
-  useEffect(() => { 
-    if (isActive) {
-      document.title = `FocusLab - ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-    } else if (minutes === 0 && seconds === 0) {
-      document.title = "Time's Up!";
+  useEffect(() => {
+    if (isActive && timerStart) {
+      timeoutRef.current = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - timerStart) / 1000);
+        const remaining = Math.max(0, initialDuration - elapsed);
+        
+        const newMinutes = Math.floor(remaining / 60);
+        const newSeconds = remaining % 60;
+        
+        setMinutes(newMinutes);
+        setSeconds(newSeconds);
+        
+        if (remaining <= 0) {
+          clearInterval(timeoutRef.current);
+          setIsActive(false);
+          setAlarmPlaying(true);
+          alarmRef.current.play();
+
+          const sessionDuration = sessionStart ? Math.round((Date.now() - sessionStart) / 60000) : 0;
+          const totalMinutes = focusedTime + sessionDuration;
+
+          if (userLoggedIn && user && totalMinutes >= 1) {
+            addTimerSession(user.uid, totalMinutes);
+            window.dispatchEvent(new CustomEvent('timerUpdate'));
+          }
+
+          setFocusedTime(0);
+          setSessionStart(null);
+          setTimerStart(null);
+        }
+      }, 100);
     } else {
-      document.title = 'FocusLab';
+      clearInterval(timeoutRef.current);
     }
+    return () => clearInterval(timeoutRef.current);
+  }, [isActive, timerStart]);
+
+  useEffect(() => {
+    document.title = isActive 
+      ? `FocusLab - ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+      : minutes === 0 && seconds === 0 ? "Time's Up!" : 'FocusLab';
   }, [minutes, seconds, isActive]);
 
-  // modes settings
   const setTimerMode = (newMode) => {
+    const sessionDuration = isActive && sessionStart
+      ? Math.round((Date.now() - sessionStart) / 60000)
+      : 0;
+    const totalMinutes = focusedTime + sessionDuration;
+
+    if (userLoggedIn && user && totalMinutes >= 1) {
+      addTimerSession(user.uid, totalMinutes);
+      window.dispatchEvent(new CustomEvent('timerUpdate'));
+    }
+
+    setFocusedTime(0);
+    setSessionStart(null);
+
+    const modeKey = newMode === "Short Break" ? "ShortBreak" : newMode === "Long Break" ? "LongBreak" : "Pomodoro";
+    const time = defaults[modeKey];
     setMode(newMode);
-    const time =
-      defaults[
-        newMode === "Short Break"
-          ? "ShortBreak"
-          : newMode === "Long Break"
-          ? "LongBreak"
-          : "Pomodoro"
-      ];
     setMinutes(time.min);
     setSeconds(time.sec);
     clearTimeout(timeoutRef.current);
@@ -73,13 +113,26 @@ const Timer = () => {
   };
 
   const resetTimer = () => {
+    const sessionDuration = isActive && sessionStart
+      ? Math.round((Date.now() - sessionStart) / 60000)
+      : 0;
+
+    const totalMinutes = focusedTime + sessionDuration;
+
+    if (userLoggedIn && user && totalMinutes >= 1) {
+      addTimerSession(user.uid, totalMinutes);
+      window.dispatchEvent(new CustomEvent('timerUpdate'));
+    }
+
+    setFocusedTime(0);
+    setSessionStart(null);
     setTimerMode(mode);
   };
 
   const updateDefaults = (e) => {
     e.preventDefault();
     const form = e.target;
-  
+
     const newDefaults = {
       Pomodoro: {
         min: parseInt(form.pomMin.value),
@@ -94,43 +147,33 @@ const Timer = () => {
         sec: parseInt(form.longSec.value),
       },
     };
-  
-    // Rejecting any 00:00 setting
+
     for (const [label, time] of Object.entries(newDefaults)) {
       if (time.min === 0 && time.sec === 0) {
         alert(`${label} time cannot be 00:00`);
         return;
       }
     }
-  
+
     setDefaults(newDefaults);
     setShowSettings(false);
   };
 
-  // updating time with deafaults change
   useEffect(() => {
-    const time =
-      defaults[
-        mode === "Short Break"
-          ? "ShortBreak"
-          : mode === "Long Break"
-          ? "LongBreak"
-          : "Pomodoro"
-      ];
+    const modeKey = mode === "Short Break" ? "ShortBreak" : mode === "Long Break" ? "LongBreak" : "Pomodoro";
+    const time = defaults[modeKey];
     setMinutes(time.min);
     setSeconds(time.sec);
     setIsActive(false);
     setAlarmPlaying(false);
   }, [defaults, mode]);
 
-
-// stopping the alarm
-const stopAlarm = () => {
-  alarmRef.current.pause();
-  alarmRef.current.currentTime = 0;
-  setAlarmPlaying(false);
-  setTimerMode(mode); 
-};
+  const stopAlarm = () => {
+    alarmRef.current.pause();
+    alarmRef.current.currentTime = 0;
+    setAlarmPlaying(false);
+    setTimerMode(mode);
+  };
 
   return (
     <div className="relative w-full h-auto bg-[#F7E5C5] border-2 rounded-2xl border-[#C49B59] p-4 text-center">
@@ -178,7 +221,6 @@ const stopAlarm = () => {
               onClick={toggleTimer}
             />
           )}
-
           <FiRefreshCcw
             className="text-[#4C4037] text-3xl cursor-pointer hover:rotate-90 transition-all p-0"
             onClick={resetTimer}
@@ -186,12 +228,11 @@ const stopAlarm = () => {
         </div>
       </div>
 
-      {/* Settings */}
+      {/* Settings Modal */}
       {showSettings && (
         <div className="absolute top-0 left-0 w-full h-full bg-[#00000066] flex items-center justify-center z-10">
           <div className="bg-[#EFD6B1] text-[#4C3A26] border-2 border-[#C49B59] rounded-2xl p-6 w-[90%] max-w-md">
             <h2 className="text-2xl mb-4 font-semibold">Settings</h2>
-
             <form onSubmit={updateDefaults} className="flex flex-col gap-4">
               <div>
                 <label className="block mb-1">Pomodoro</label>
@@ -218,7 +259,6 @@ const stopAlarm = () => {
                   />
                 </div>
               </div>
-
               <div>
                 <label className="block mb-1">Short Break</label>
                 <div className="flex gap-2">
@@ -242,7 +282,6 @@ const stopAlarm = () => {
                   />
                 </div>
               </div>
-
               <div>
                 <label className="block mb-1">Long Break</label>
                 <div className="flex gap-2">
@@ -266,19 +305,11 @@ const stopAlarm = () => {
                   />
                 </div>
               </div>
-
               <div className="flex justify-between mt-6">
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-[#C49B59] text-white rounded hover:brightness-110 transition"
-                >
+                <button type="submit" className="px-4 py-2 bg-[#C49B59] text-white rounded hover:brightness-110 transition">
                   Save
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setShowSettings(false)}
-                  className="px-4 py-2 bg-gray-300 text-[#4C4037] rounded hover:brightness-105 transition"
-                >
+                <button type="button" onClick={() => setShowSettings(false)} className="px-4 py-2 bg-gray-300 text-[#4C4037] rounded hover:brightness-105 transition">
                   Cancel
                 </button>
               </div>
@@ -287,7 +318,7 @@ const stopAlarm = () => {
         </div>
       )}
 
-      {/*  Alarm  */}
+      {/* Alarm */}
       <audio ref={alarmRef} src="/audio/continu.mp3" />
       {alarmPlaying && (
         <button
@@ -295,7 +326,7 @@ const stopAlarm = () => {
           onClick={stopAlarm}
         >
           Stop Alarm
-        </button> 
+        </button>
       )}
     </div>
   );

@@ -1,15 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 
 const TextEditor = ({ content, onChange, title }) => {
   const contentRef = useRef(null)
 
-  const formatDoc = (cmd, value = null) => {
-    if (value) {
-      document.execCommand(cmd, false, value)
-    } else {
-      document.execCommand(cmd)
-    }
-  }
+  const formatDoc = (cmd, value = null) => document.execCommand(cmd, false, value)
 
   const addLink = () => {
     let url = prompt('Insert url')
@@ -19,11 +13,7 @@ const TextEditor = ({ content, onChange, title }) => {
     formatDoc('createLink', url)
   }
 
-  const handleContentChange = () => {
-    if (contentRef.current) {
-      onChange(contentRef.current.innerHTML)
-    }
-  }
+  const handleContentChange = () => onChange(contentRef.current?.innerHTML || '')
 
   useEffect(() => {
     if (contentRef.current && content !== contentRef.current.innerHTML) {

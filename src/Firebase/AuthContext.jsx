@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useContext } from "react"
+import React, { useEffect, useState, useContext, createContext } from "react"
 import { auth } from "./Firebase"
 import { onAuthStateChanged } from "firebase/auth"
 
-const AuthContext = React.createContext()
+const AuthContext = createContext()
 
-export function useAuth() {
-  return useContext(AuthContext)
-}
+export const useAuth = () => useContext(AuthContext)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
@@ -15,16 +13,15 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     return onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setUserLoggedIn(!!user);
-      setLoading(false);
-    });
+      setUser(user)
+      setUserLoggedIn(!!user)
+      setLoading(false)
+    })
   }, [])
 
-  const value = {
-    user,
-    userLoggedIn,
-    loading,
-  }
-  return <AuthContext.Provider value={value}> {!loading && children} </AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ user, userLoggedIn, loading }}>
+      {!loading && children}
+    </AuthContext.Provider>
+  )
 }

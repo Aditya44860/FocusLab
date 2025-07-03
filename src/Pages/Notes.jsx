@@ -3,8 +3,9 @@ import { useAuth } from '../Firebase/AuthContext'
 import LoginRequired from '../components/LoginRequired'
 import TextEditor from '../components/TextEditor'
 import { db } from '../Firebase/Firebase'
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where, orderBy } from 'firebase/firestore'
-import { FiPlus, FiArrowLeft, FiTrash2, FiFileText, FiEdit3, FiSave } from 'react-icons/fi'
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore'
+import { FiPlus, FiArrowLeft, FiTrash2, FiFileText, FiSave, FiEdit3 } from 'react-icons/fi'
+
 
 const Notes = () => {
   const { userLoggedIn, user } = useAuth()
@@ -15,8 +16,8 @@ const Notes = () => {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
-  const [originalContent, setOriginalContent] = useState('')
   const [showWarning, setShowWarning] = useState(false)
+
 
   document.title = "FocusLab - Notes"
 
@@ -40,21 +41,11 @@ const Notes = () => {
 
   const fetchDocs = async () => {
     try {
-      console.log('Fetching docs for user:', user.uid)
-      const q = query(
-        collection(db, 'notes'),
-        where('userId', '==', user.uid)
-      )
+      const q = query(collection(db, 'notes'), where('userId', '==', user.uid))
       const querySnapshot = await getDocs(q)
-      console.log('Query result:', querySnapshot.size, 'documents')
-      const docsData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }))
-      setDocs(docsData)
+      setDocs(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
     } catch (error) {
       console.error('Error fetching docs:', error)
-      alert('Error loading notes: ' + error.message)
     } finally {
       setLoading(false)
     }
@@ -62,9 +53,7 @@ const Notes = () => {
 
   const createNewDoc = async () => {
     const docTitle = prompt('Enter document title:') || 'Untitled Document'
-    
     try {
-      console.log('Creating doc for user:', user.uid)
       const docRef = await addDoc(collection(db, 'notes'), {
         title: docTitle,
         content: '',
@@ -72,18 +61,11 @@ const Notes = () => {
         createdAt: new Date(),
         lastModified: new Date()
       })
-      console.log('Document created:', docRef.id)
-      
-      setSelectedDoc({
-        id: docRef.id,
-        title: docTitle,
-        content: ''
-      })
+      setSelectedDoc({ id: docRef.id, title: docTitle, content: '' })
       setContent('')
       fetchDocs()
     } catch (error) {
       console.error('Error creating document:', error)
-      alert('Error creating note: ' + error.message)
     }
   }
 
@@ -103,9 +85,7 @@ const Notes = () => {
 
   const openDocument = (document) => {
     setSelectedDoc(document)
-    const docContent = document.content || ''
-    setContent(docContent)
-    setOriginalContent(docContent)
+    setContent(document.content || '')
     setHasUnsavedChanges(false)
   }
 
@@ -141,7 +121,6 @@ const Notes = () => {
       fetchDocs()
       setSaved(true)
       setHasUnsavedChanges(false)
-      setOriginalContent(content)
       setTimeout(() => setSaved(false), 2000)
     } catch (error) {
       console.error('Error saving document:', error)
@@ -149,8 +128,6 @@ const Notes = () => {
       setSaving(false)
     }
   }
-
-
 
   if (selectedDoc) {
     return (
@@ -176,6 +153,7 @@ const Notes = () => {
               <span className="hidden md:inline">{saving ? 'Saving...' : saved ? 'Saved!' : 'Save'}</span>
               <span className="md:hidden">{saving ? '...' : saved ? '✓' : 'Save'}</span>
             </button>
+
             <button
               onClick={() => deleteDocument(selectedDoc.id)}
               className="text-red-500 hover:text-red-700 transition-colors p-2"
@@ -190,7 +168,7 @@ const Notes = () => {
               content={content}
               onChange={(newContent) => {
                 setContent(newContent)
-                setHasUnsavedChanges(newContent !== originalContent)
+                setHasUnsavedChanges(true)
               }}
               title={selectedDoc.title}
             />

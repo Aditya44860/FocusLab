@@ -193,7 +193,6 @@ const Nav = () => {
             >
               <li className="cursor-pointer py-4 px-6">Notes</li>
             </NavLink>
-            
 
           </ul>
         </div>
