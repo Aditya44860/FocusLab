@@ -225,27 +225,30 @@ const Groups = () => {
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
                   <h3 className="text-lg font-bold mb-4">Create Group</h3>
-                  <input
-                    type="text"
-                    value={groupName}
-                    onChange={(e) => setGroupName(e.target.value)}
-                    placeholder="Group name"
-                    className="w-full p-3 border rounded-lg mb-4"
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={createGroup}
-                      className="flex-1 bg-[#B6825E] text-white py-2 rounded-lg"
-                    >
-                      Create
-                    </button>
-                    <button
-                      onClick={() => setShowCreateGroup(false)}
-                      className="flex-1 border border-gray-300 py-2 rounded-lg"
-                    >
-                      Cancel
-                    </button>
-                  </div>
+                  <form onSubmit={(e) => { e.preventDefault(); createGroup(); }}>
+                    <input
+                      type="text"
+                      value={groupName}
+                      onChange={(e) => setGroupName(e.target.value)}
+                      placeholder="Group name"
+                      className="w-full p-3 border rounded-lg mb-4"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        className="flex-1 bg-[#B6825E] text-white py-2 rounded-lg"
+                      >
+                        Create
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowCreateGroup(false)}
+                        className="flex-1 border border-gray-300 py-2 rounded-lg"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
             )}
@@ -255,27 +258,30 @@ const Groups = () => {
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
                   <h3 className="text-lg font-bold mb-4">Join Group</h3>
-                  <input
-                    type="text"
-                    value={joinCode}
-                    onChange={(e) => setJoinCode(e.target.value)}
-                    placeholder="Enter group code"
-                    className="w-full p-3 border rounded-lg mb-4"
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={joinGroup}
-                      className="flex-1 bg-[#B6825E] text-white py-2 rounded-lg"
-                    >
-                      Join
-                    </button>
-                    <button
-                      onClick={() => setShowJoinGroup(false)}
-                      className="flex-1 border border-gray-300 py-2 rounded-lg"
-                    >
-                      Cancel
-                    </button>
-                  </div>
+                  <form onSubmit={(e) => { e.preventDefault(); joinGroup(); }}>
+                    <input
+                      type="text"
+                      value={joinCode}
+                      onChange={(e) => setJoinCode(e.target.value)}
+                      placeholder="Enter group code"
+                      className="w-full p-3 border rounded-lg mb-4"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        className="flex-1 bg-[#B6825E] text-white py-2 rounded-lg"
+                      >
+                        Join
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowJoinGroup(false)}
+                        className="flex-1 border border-gray-300 py-2 rounded-lg"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
             )}
@@ -301,27 +307,30 @@ const Groups = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
             <h3 className="text-lg font-bold mb-4">Join Group</h3>
-            <input
-              type="text"
-              value={joinCode}
-              onChange={(e) => setJoinCode(e.target.value)}
-              placeholder="Enter group code"
-              className="w-full p-3 border rounded-lg mb-4"
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={joinGroup}
-                className="flex-1 bg-[#B6825E] text-white py-2 rounded-lg"
-              >
-                Join
-              </button>
-              <button
-                onClick={() => setShowJoinGroup(false)}
-                className="flex-1 border border-gray-300 py-2 rounded-lg"
-              >
-                Cancel
-              </button>
-            </div>
+            <form onSubmit={(e) => { e.preventDefault(); joinGroup(); }}>
+              <input
+                type="text"
+                value={joinCode}
+                onChange={(e) => setJoinCode(e.target.value)}
+                placeholder="Enter group code"
+                className="w-full p-3 border rounded-lg mb-4"
+              />
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 bg-[#B6825E] text-white py-2 rounded-lg"
+                >
+                  Join
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowJoinGroup(false)}
+                  className="flex-1 border border-gray-300 py-2 rounded-lg"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
