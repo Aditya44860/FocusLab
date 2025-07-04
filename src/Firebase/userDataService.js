@@ -1,8 +1,8 @@
-import { db } from './Firebase'
+import { firestore } from './Firebase'
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore'
 
 export const initializeUserData = async (userId) => {
-  const docRef = doc(db, 'user_data', userId)
+  const docRef = doc(firestore, 'user_data', userId)
   const docSnap = await getDoc(docRef)
   if (!docSnap.exists()) {
     const today = new Date().toDateString()
@@ -15,7 +15,7 @@ export const initializeUserData = async (userId) => {
 }
 
 export const getUserData = async (userId) => {
-  const docRef = doc(db, 'user_data', userId)
+  const docRef = doc(firestore, 'user_data', userId)
   const docSnap = await getDoc(docRef)
   if (docSnap.exists()) {
     return docSnap.data()
@@ -26,18 +26,18 @@ export const getUserData = async (userId) => {
 }
 
 export const updateUserTodos = async (userId, todos) => {
-  const docRef = doc(db, 'user_data', userId)
+  const docRef = doc(firestore, 'user_data', userId)
   await setDoc(docRef, { todos }, { merge: true })
 }
 
 export const updateUserNotes = async (userId, quickNotes) => {
-  const docRef = doc(db, 'user_data', userId)
+  const docRef = doc(firestore, 'user_data', userId)
   await setDoc(docRef, { quickNotes }, { merge: true })
 }
 
 export const addTimerSession = async (userId, minutes) => {
   const today = new Date().toDateString()
-  const docRef = doc(db, 'user_data', userId)
+  const docRef = doc(firestore, 'user_data', userId)
   const docSnap = await getDoc(docRef)
   const data = docSnap.exists() ? docSnap.data() : {}
   const timerData = data.timerData || {}

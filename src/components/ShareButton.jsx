@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { FiShare2, FiX, FiCopy } from 'react-icons/fi'
-import { db } from '../Firebase/Firebase'
+import { firestore } from '../Firebase/Firebase'
 import { collection, addDoc } from 'firebase/firestore'
 
 const ShareButton = ({ noteTitle, noteContent, userId }) => {
@@ -11,7 +11,7 @@ const ShareButton = ({ noteTitle, noteContent, userId }) => {
   const generateShareLink = async () => {
     setGenerating(true)
     try {
-      const docRef = await addDoc(collection(db, 'publicNotes'), {
+      const docRef = await addDoc(collection(firestore, 'publicNotes'), {
         title: noteTitle,
         content: noteContent,
         sharedBy: userId,

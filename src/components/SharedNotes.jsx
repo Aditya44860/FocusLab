@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../Firebase/AuthContext'
-import { db } from '../Firebase/Firebase'
+import { firestore } from '../Firebase/Firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 import { FiFileText } from 'react-icons/fi'
 
@@ -18,7 +18,7 @@ const SharedNotes = () => {
   const fetchSharedNotes = async () => {
     try {
       const q = query(
-        collection(db, 'sharedNotes'), 
+        collection(firestore, 'sharedNotes'), 
         where('sharedWith', '==', user.email)
       )
       const querySnapshot = await getDocs(q)

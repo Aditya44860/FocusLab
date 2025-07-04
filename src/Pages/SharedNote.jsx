@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { db } from '../Firebase/Firebase'
+import { firestore } from '../Firebase/Firebase'
 import { doc, getDoc } from 'firebase/firestore'
 import { FiFileText } from 'react-icons/fi'
 
@@ -16,7 +16,7 @@ const SharedNote = () => {
 
   const fetchSharedNote = async () => {
     try {
-      const docRef = doc(db, 'publicNotes', id)
+      const docRef = doc(firestore, 'publicNotes', id)
       const docSnap = await getDoc(docRef)
       
       if (docSnap.exists()) {
