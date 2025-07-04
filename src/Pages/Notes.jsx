@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../Firebase/AuthContext'
 import LoginRequired from '../components/LoginRequired'
 import TextEditor from '../components/TextEditor'
-import { db } from '../Firebase/Firebase'
+import { firestore } from '../Firebase/Firebase'
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore'
 import { FiPlus, FiArrowLeft, FiTrash2, FiFileText, FiSave, FiEdit3 } from 'react-icons/fi'
 import ShareButton from '../components/ShareButton'
@@ -44,7 +44,7 @@ const Notes = () => {
 
   const fetchDocs = async () => {
     try {
-      const q = query(collection(db, 'notes'), where('userId', '==', user.uid))
+      const q = query(collection(firestore, 'notes'), where('userId', '==', user.uid))
       const querySnapshot = await getDocs(q)
       setDocs(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
     } catch (error) {
@@ -57,7 +57,7 @@ const Notes = () => {
   const createNewDoc = async () => {
     const docTitle = prompt('Enter document title:') || 'Untitled Document'
     try {
-      const docRef = await addDoc(collection(db, 'notes'), {
+      const docRef = await addDoc(collection(firestore, 'notes'), {
         title: docTitle,
         content: '',
         userId: user.uid,
@@ -75,7 +75,7 @@ const Notes = () => {
   const deleteDocument = async (docId) => {
     if (window.confirm('Are you sure you want to delete this document?')) {
       try {
-        await deleteDoc(doc(db, 'notes', docId))
+        await deleteDoc(doc(firestore, 'notes', docId))
         if (selectedDoc?.id === docId) {
           setSelectedDoc(null)
         }
@@ -118,7 +118,7 @@ const Notes = () => {
     
     setSaving(true)
     try {
-      await updateDoc(doc(db, 'notes', selectedDoc.id), {
+      await updateDoc(doc(firestore, 'notes', selectedDoc.id), {
         title: newTitle,
         content: content,
         lastModified: new Date()
