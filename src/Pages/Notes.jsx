@@ -66,6 +66,7 @@ const Notes = () => {
       })
       setSelectedDoc({ id: docRef.id, title: docTitle, content: '' })
       setContent('')
+      setNewTitle(docTitle)
       fetchDocs()
     } catch (error) {
       console.error('Error creating document:', error)
