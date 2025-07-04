@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiSend, FiPlus, FiUsers, FiCopy, FiArrowLeft, FiLogOut } from 'react-icons/fi';
+import { FiSend, FiPlus, FiUsers, FiCopy, FiArrowLeft, FiLogOut, FiClock } from 'react-icons/fi';
 import { useAuth } from '../Firebase/AuthContext';
 import { db } from '../Firebase/Firebase';
-import { ref, onValue, push, serverTimestamp } from 'firebase/database';
+import { ref, onValue, push, serverTimestamp, set } from 'firebase/database';
 
 const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGroup }) => {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [showGroupsMenu, setShowGroupsMenu] = useState(false);
+  const [timeLeft, setTimeLeft] = useState('');
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -38,6 +39,38 @@ const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGrou
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if (!userGroup) return;
+
+    const groupRef = ref(db, `groups/${userGroup}`);
+    const unsubscribe = onValue(groupRef, (snapshot) => {
+      const group = snapshot.val();
+      if (group && group.expiresAt) {
+        const updateTimer = async () => {
+          const now = Date.now();
+          const timeRemaining = group.expiresAt - now;
+          
+          if (timeRemaining <= 0) {
+            setTimeLeft('Expired');
+            // Delete the expired group
+            await set(ref(db, `groups/${userGroup}`), null);
+          } else {
+            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            setTimeLeft(`${hours}h ${minutes}m left`);
+          }
+        };
+        
+        updateTimer();
+        const interval = setInterval(updateTimer, 60000); // Update every minute
+        
+        return () => clearInterval(interval);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [userGroup]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -82,7 +115,7 @@ const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGrou
           <div>
             <h2 className="font-bold">{isGroupOwner ? 'Your Group' : 'Group Chat'}</h2>
             <p className="text-sm opacity-75">Code: {userGroup?.split('_')[1]}</p>
-            <p className="text-xs opacity-60">⏰ Expires in 24 hours</p>
+            <p className="text-xs opacity-60 flex items-center gap-1"><FiClock size={12} /> {timeLeft || 'Loading...'}</p>
           </div>
         </div>
         <button
@@ -96,7 +129,7 @@ const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGrou
 
       {/* Messages */}
       <div className="flex-grow p-4 overflow-y-auto">
-        <div className="bg-white rounded-lg p-4 shadow-md max-w-3xl mx-auto h-[60vh] overflow-y-auto">
+        <div className="bg-white rounded-lg p-4 shadow-md max-w-3xl mx-auto h-[75vh] overflow-y-auto">
           {messages.map((msg, index) => (
             <div key={index} className={`mb-2 ${msg.isSystem ? 'text-center text-gray-500 italic text-sm' : ''}`}>
               {msg.isSystem ? (
@@ -114,7 +147,7 @@ const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGrou
       </div>
 
       {/* Message Input */}
-      <form onSubmit={sendMessage} className="flex justify-center px-4 pb-6">
+      <form onSubmit={sendMessage} className="flex justify-center px-4 pb-4">
         <input
           type="text"
           value={input}
@@ -164,13 +197,6 @@ const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGrou
                 <FiLogOut /> Leave Group
               </button>
             </div>
-            
-            <button
-              onClick={() => setShowGroupsMenu(false)}
-              className="w-full border border-gray-300 py-2 rounded-lg text-gray-600 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
