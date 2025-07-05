@@ -7,7 +7,6 @@ import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } 
 import { FiPlus, FiArrowLeft, FiTrash2, FiFileText, FiSave, FiEdit3 } from 'react-icons/fi'
 import ShareButton from '../components/ShareButton'
 
-
 const Notes = () => {
   const { userLoggedIn, user } = useAuth()
   const [docs, setDocs] = useState([])
@@ -20,7 +19,6 @@ const Notes = () => {
   const [showWarning, setShowWarning] = useState(false)
   const [editingTitle, setEditingTitle] = useState(false)
   const [newTitle, setNewTitle] = useState('')
-
 
   document.title = "FocusLab - Notes"
 
@@ -135,8 +133,6 @@ const Notes = () => {
       setSaving(false)
     }
   }
-
-
 
   if (selectedDoc) {
     return (

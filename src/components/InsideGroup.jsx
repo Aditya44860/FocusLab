@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { FiSend, FiPlus, FiUsers, FiCopy, FiArrowLeft, FiLogOut, FiClock } from 'react-icons/fi';
+import { IoChatboxEllipsesOutline } from 'react-icons/io5';
 import { useAuth } from '../Firebase/AuthContext';
 import { db } from '../Firebase/Firebase';
 import { ref, onValue, push, serverTimestamp, set } from 'firebase/database';
 
-const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGroup }) => {
+const InsideGroup = ({ userGroup, isGroupOwner, onJoinGroup, onLeaveGroup }) => {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [showGroupsMenu, setShowGroupsMenu] = useState(false);
   const [timeLeft, setTimeLeft] = useState('');
+  const [groupName, setGroupName] = useState('');
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -46,7 +48,9 @@ const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGrou
     const groupRef = ref(db, `groups/${userGroup}`);
     const unsubscribe = onValue(groupRef, (snapshot) => {
       const group = snapshot.val();
-      if (group && group.expiresAt) {
+      if (group) {
+        setGroupName(group.name || 'Group Chat');
+        if (group.expiresAt) {
         const updateTimer = async () => {
           const now = Date.now();
           const timeRemaining = group.expiresAt - now;
@@ -66,6 +70,7 @@ const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGrou
         const interval = setInterval(updateTimer, 60000); // Update every minute
         
         return () => clearInterval(interval);
+        }
       }
     });
 
@@ -76,17 +81,20 @@ const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGrou
     e.preventDefault();
     if (!input.trim() || !userGroup || !user) return;
 
+    const messageText = input;
+    setInput(''); // Clear immediately
+
     try {
       const messagesRef = ref(db, `groups/${userGroup}/messages`);
       await push(messagesRef, {
-        text: input,
+        text: messageText,
         sender: user.displayName || user.email,
         uid: user.uid,
         time: serverTimestamp(),
       });
-      setInput('');
     } catch (error) {
       console.error('Error sending message:', error);
+      setInput(messageText); // Restore on error
     }
   };
 
@@ -113,7 +121,7 @@ const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGrou
             Back
           </button>
           <div>
-            <h2 className="font-bold">{isGroupOwner ? 'Your Group' : 'Group Chat'}</h2>
+            <h2 className="font-bold">{groupName}</h2>
             <p className="text-sm opacity-75">Code: {userGroup?.split('_')[1]}</p>
             <p className="text-xs opacity-60 flex items-center gap-1"><FiClock size={12} /> {timeLeft || 'Loading...'}</p>
           </div>
@@ -130,18 +138,25 @@ const InsideGroup = ({ userGroup, isGroupOwner, onBack, onJoinGroup, onLeaveGrou
       {/* Messages */}
       <div className="flex-grow p-4 overflow-y-auto">
         <div className="bg-white rounded-lg p-4 shadow-md max-w-3xl mx-auto h-[75vh] overflow-y-auto">
-          {messages.map((msg, index) => (
-            <div key={index} className={`mb-2 ${msg.isSystem ? 'text-center text-gray-500 italic text-sm' : ''}`}>
-              {msg.isSystem ? (
-                <span>{msg.text}</span>
-              ) : (
-                <>
-                  <strong className="text-[#B6825E]">{msg.sender}:</strong>{" "}
-                  <span>{msg.text}</span>
-                </>
-              )}
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center">
+              <IoChatboxEllipsesOutline size={128} className="text-[#b1520db9] mb-4" />
+              <p className="text-[#967259] text-lg">Share code with people to start texting</p>
             </div>
-          ))}
+          ) : (
+            messages.map((msg, index) => (
+              <div key={index} className={`mb-2 ${msg.isSystem ? 'text-center text-gray-500 italic text-sm' : ''}`}>
+                {msg.isSystem ? (
+                  <span>{msg.text}</span>
+                ) : (
+                  <>
+                    <strong className="text-[#B6825E]">{msg.sender}:</strong>{" "}
+                    <span>{msg.text}</span>
+                  </>
+                )}
+              </div>
+            ))
+          )}
           <div ref={messagesEndRef} />
         </div>
       </div>

@@ -18,7 +18,6 @@ const Groups = () => {
 
   document.title = "FocusLab - Groups";
 
-  // Generate random 6-character code
   const generateCode = () => Math.random().toString(36).substring(2, 8).toUpperCase();
 
   useEffect(() => {
@@ -49,8 +48,6 @@ const Groups = () => {
     return () => unsubscribe();
   }, [userLoggedIn, user]);
 
-
-
   const createGroup = async () => {
     if (!groupName.trim()) return;
     
@@ -59,8 +56,6 @@ const Groups = () => {
     const expiresAt = Date.now() + (24 * 60 * 60 * 1000); // 24 hours from now
     
     try {
-      console.log('Creating group with ID:', groupId);
-      
       // Create group with expiration
       await set(ref(db, `groups/${groupId}`), {
         name: groupName,
@@ -77,12 +72,8 @@ const Groups = () => {
         }
       });
       
-      console.log('Group created, linking user...');
-      
       // Link user to group
       await set(ref(db, `userGroups/${user.uid}`), groupId);
-      
-      console.log('User linked to group successfully');
       
       setShowCreateGroup(false);
       setGroupName('');
@@ -165,8 +156,6 @@ const Groups = () => {
     }, { onlyOnce: true });
   };
 
-
-
   if (!userLoggedIn) {
     return (
       <div className="bg-[#E9CA9F] min-h-screen overflow-hidden">
@@ -176,8 +165,6 @@ const Groups = () => {
     );
   }
 
-
-  
   useEffect(() => {
     if (userGroup && user) {
       const groupRef = ref(db, `groups/${userGroup}`);
