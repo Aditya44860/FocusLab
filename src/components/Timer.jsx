@@ -319,7 +319,7 @@ const Timer = () => {
       )}
 
       {/* Alarm */}
-      <audio ref={alarmRef} src="/audio/continu.mp3" />
+      <audio ref={alarmRef} src="/audio/Alarm.mp3" />
       {alarmPlaying && (
         <button
           className="mt-4 px-4 py-2 w-full bg-[#C49B59] text-white rounded hover:brightness-110 transition"
