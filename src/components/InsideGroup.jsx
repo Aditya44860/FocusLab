@@ -38,6 +38,7 @@ const InsideGroup = ({ userGroup, isGroupOwner, onJoinGroup, onLeaveGroup }) => 
     return () => unsubscribe();
   }, [userGroup]);
 
+  //auto scrolling to latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -178,7 +179,7 @@ const InsideGroup = ({ userGroup, isGroupOwner, onJoinGroup, onLeaveGroup }) => 
         </button>
       </form>
 
-      {/* Groups Menu Modal */}
+      {/* Groups Menu */}
       {showGroupsMenu && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">

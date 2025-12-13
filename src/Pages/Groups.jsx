@@ -21,7 +21,7 @@ const Groups = () => {
   const generateCode = () => Math.random().toString(36).substring(2, 8).toUpperCase();
 
   useEffect(() => {
-    if (!userLoggedIn || !user) return;
+    if (!userLoggedIn || !user) return; //if not logged in
 
     // Check if user has a group or is member of one
     const userGroupRef = ref(db, `userGroups/${user.uid}`);
@@ -165,6 +165,7 @@ const Groups = () => {
     );
   }
 
+  // group owner check
   useEffect(() => {
     if (userGroup && user) {
       const groupRef = ref(db, `groups/${userGroup}`);
@@ -240,7 +241,7 @@ const Groups = () => {
               </div>
             )}
 
-            {/* Join Group Modal */}
+            {/* Join Group */}
             {showJoinGroup && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">

@@ -47,7 +47,7 @@ const Timer = () => {
 
   useEffect(() => {
     if (isActive && timerStart) {
-      timeoutRef.current = setInterval(() => {
+      timeoutRef.current = setInterval(() => { //using timeoutRef.current lets us store value without re-renders
         const elapsed = Math.floor((Date.now() - timerStart) / 1000);
         const remaining = Math.max(0, initialDuration - elapsed);
         
@@ -228,7 +228,7 @@ const Timer = () => {
         </div>
       </div>
 
-      {/* Settings Modal */}
+      {/* Settings */}
       {showSettings && (
         <div className="absolute top-0 left-0 w-full h-full bg-[#00000066] flex items-center justify-center z-10">
           <div className="bg-[#EFD6B1] text-[#4C3A26] border-2 border-[#C49B59] rounded-2xl p-6 w-[90%] max-w-md">

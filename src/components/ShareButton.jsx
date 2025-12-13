@@ -4,7 +4,7 @@ import { firestore } from '../Firebase/Firebase'
 import { collection, addDoc } from 'firebase/firestore'
 
 const ShareButton = ({ noteTitle, noteContent, userId }) => {
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModel] = useState(false)
   const [shareLink, setShareLink] = useState('')
   const [generating, setGenerating] = useState(false)
 
@@ -33,7 +33,7 @@ const ShareButton = ({ noteTitle, noteContent, userId }) => {
   }
 
   const handleShare = () => {
-    setShowModal(true)
+    setShowModel(true)
     if (!shareLink) {
       generateShareLink()
     }
@@ -54,7 +54,7 @@ const ShareButton = ({ noteTitle, noteContent, userId }) => {
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-4 w-full">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-[#4C4037]">Share Note</h3>
-              <button onClick={() => setShowModal(false)}>
+              <button onClick={() => setShowModel(false)}>
                 <FiX size={20} className="text-gray-500 hover:text-gray-700" />
               </button>
             </div>

@@ -43,8 +43,8 @@ const Notes = () => {
   const fetchDocs = async () => {
     try {
       const q = query(collection(firestore, 'notes'), where('userId', '==', user.uid))
-      const querySnapshot = await getDocs(q)
-      setDocs(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+      const queryResult = await getDocs(q)
+      setDocs(queryResult.docs.map(doc => ({ id: doc.id, ...doc.data() })))
     } catch (error) {
       console.error('Error fetching docs:', error)
     } finally {
@@ -262,7 +262,7 @@ const Notes = () => {
             <div className="text-center py-12">
               <FiFileText size={64} className="mx-auto text-[#C49B59] mb-4" />
               <h3 className="text-xl font-semibold text-[#4C4037] mb-2">No documents yet</h3>
-              <p className="text-[#967259] mb-6">Create your first Google Doc to get started</p>
+              <p className="text-[#967259] mb-6">Create your first Document to get started</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">

@@ -40,15 +40,16 @@ export const addTimerSession = async (userId, minutes) => {
   const docRef = doc(firestore, 'user_data', userId)
   const docSnap = await getDoc(docRef)
   const data = docSnap.exists() ? docSnap.data() : {}
+
   const timerData = data.timerData || {}
   timerData[today] = (timerData[today] || 0) + minutes
   
   // Clean up data older than 14 days
   const cutoffDate = new Date()
   cutoffDate.setDate(cutoffDate.getDate() - 14)
-  Object.keys(timerData).forEach(dateStr => {
-    if (new Date(dateStr) < cutoffDate) {
-      delete timerData[dateStr]
+  Object.keys(timerData).forEach(date => {
+    if (new Date(date) < cutoffDate) {
+      delete timerData[date]
     }
   })
   

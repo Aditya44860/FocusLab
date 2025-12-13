@@ -14,10 +14,10 @@ const ProgressBar = () => {
         const timerData = data.timerData || {}
         const baseDate = new Date()
         baseDate.setDate(baseDate.getDate() - (weekOffset * 7))
-        const currentDay = baseDate.getDay() // 0=Sun, 1=Mon, etc
+
+        const currentDay = baseDate.getDay()
         const weekDays = []
         
-        // Start from Monday (1) and go through Sunday (0)
         for (let i = 1; i <= 7; i++) {
           const dayOffset = i - currentDay - 1
           const date = new Date(baseDate)
@@ -28,16 +28,27 @@ const ProgressBar = () => {
           weekDays.push({ name: dayName, hours: minutes / 60, date: new Date(date) })
         }
         setWeekData(weekDays)
+      }).catch(error => {
+        console.error('Error loading week data:', error)
+        setWeekData([
+          { name: "Mon", hours: 0 },
+          { name: "Tue", hours: 0 },
+          { name: "Wed", hours: 0 },
+          { name: "Thu", hours: 0 },
+          { name: "Fri", hours: 0 },
+          { name: "Sat", hours: 0 },
+          { name: "Sun", hours: 0 }
+        ])
       })
     } else {
       setWeekData([
-        { name: "Mon", hours: null },
-        { name: "Tue", hours: null },
-        { name: "Wed", hours: null },
-        { name: "Thu", hours: null },
-        { name: "Fri", hours: null },
-        { name: "Sat", hours: null },
-        { name: "Sun", hours: null }
+        { name: "Mon", hours: 0 },
+        { name: "Tue", hours: 0 },
+        { name: "Wed", hours: 0 },
+        { name: "Thu", hours: 0 },
+        { name: "Fri", hours: 0 },
+        { name: "Sat", hours: 0 },
+        { name: "Sun", hours: 0 }
       ])
     }
   }
@@ -75,16 +86,16 @@ const ProgressBar = () => {
         )}
       </div>
 
-      <div className="flex items-end justify-between gap-4 h-68 mt-4 p-4 bg-[#FFF7EA] rounded-lg shadow border border-[#C49B59]">
+      <div className="flex items-end justify-between gap-4 h-64 mt-4 p-4 bg-[#FFF7EA] rounded-lg shadow border border-[#C49B59]">
         {weekData.map((day, index) => (
           <div key={index} className="flex flex-col items-center justify-end h-full">
             <div className="text-xs text-gray-700 mb-1">
               {day.hours ? (day.hours >= 1 ? `${day.hours.toFixed(1)}h` : `${Math.round(day.hours * 60)}m`) : (day.date && day.date > new Date()) ? "" : "0m"}
             </div>
             <div
-              className="w-6 bg-[#cf9540b2] rounded-t-md transition-all"
-              style={{ height: day.hours ? `${(day.hours / MAX_HOURS) * 100}%` : '0%' }}
-              title={day.hours ? `${day.hours.toFixed(1)} hrs` : 'No data'}
+              className="w-6 bg-[#cf9540b2] rounded-t-md transition-all min-h-[4px]"
+              style={{ height: day.hours > 0 ? `${Math.max((day.hours / MAX_HOURS) * 100, 10)}%` : '4px' }}
+              title={day.hours > 0 ? `${day.hours.toFixed(1)} hrs` : 'No data'}
             />
             <span className="mt-3 text-xs font-semibold text-[#5B4636]">{day.name}</span>
           </div>
