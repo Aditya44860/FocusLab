@@ -25,6 +25,21 @@ const Timer = () => {
   const timeoutRef = useRef(null);
   const alarmRef = useRef(null);
 
+  const saveCurrentSession = () => {
+    if (sessionStart) {
+      const sessionDuration = Math.round((Date.now() - sessionStart) / 60000);
+      const totalMinutes = focusedTime + sessionDuration;
+      
+      if (userLoggedIn && user && totalMinutes >= 1) {
+        addTimerSession(user.uid, totalMinutes);
+        window.dispatchEvent(new CustomEvent('timerUpdate'));
+      }
+      
+      setFocusedTime(0);
+      setSessionStart(null);
+    }
+  };
+
   const toggleTimer = () => {
     setIsActive((prev) => {
       if (!prev) {
@@ -32,13 +47,7 @@ const Timer = () => {
         setTimerStart(Date.now());
         setInitialDuration(minutes * 60 + seconds);
       } else {
-        if (sessionStart) {
-          const sessionDuration = Math.round((Date.now() - sessionStart) / 60000);
-          if (sessionDuration >= 1) {
-            setFocusedTime((prev) => prev + sessionDuration);
-          }
-          setSessionStart(null);
-        }
+        saveCurrentSession();
         setTimerStart(null);
       }
       return !prev;
@@ -81,6 +90,15 @@ const Timer = () => {
     }
     return () => clearInterval(timeoutRef.current);
   }, [isActive, timerStart]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      saveCurrentSession();
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [sessionStart, focusedTime, userLoggedIn, user]);
 
   useEffect(() => {
     document.title = isActive 

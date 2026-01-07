@@ -36,6 +36,7 @@ export const updateUserNotes = async (userId, quickNotes) => {
 }
 
 export const addTimerSession = async (userId, minutes) => {
+  console.log('Adding timer session:', { userId, minutes })
   const today = new Date().toDateString()
   const docRef = doc(firestore, 'user_data', userId)
   const docSnap = await getDoc(docRef)
@@ -43,6 +44,7 @@ export const addTimerSession = async (userId, minutes) => {
 
   const timerData = data.timerData || {}
   timerData[today] = (timerData[today] || 0) + minutes
+  console.log('Updated timer data:', timerData)
   
   // Clean up data older than 14 days
   const cutoffDate = new Date()
@@ -54,4 +56,5 @@ export const addTimerSession = async (userId, minutes) => {
   })
   
   await setDoc(docRef, { timerData }, { merge: true })
+  console.log('Timer session saved successfully')
 }

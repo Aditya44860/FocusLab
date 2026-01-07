@@ -189,7 +189,7 @@ const Groups = () => {
       <div className="bg-[#E9CA9F] min-h-screen overflow-hidden">
         <Navbar />
         <div className="flex justify-center items-center min-h-[80vh]">
-          <div className="bg-white rounded-lg p-8 shadow-lg max-w-md w-full mx-4">
+          <div className="bg-white rounded-lg p-8 shadow-2xl shadow-amber-900/50 transform hover:scale-105 transition-all duration-300 max-w-md w-full mx-4 border border-gray-100">
             <h2 className="text-2xl font-bold text-[#B6825E] mb-6 text-center">Study Groups</h2>
             
             <div className="space-y-4">
@@ -202,7 +202,7 @@ const Groups = () => {
               
               <button
                 onClick={() => setShowJoinGroup(true)}
-                className="w-full border-2 border-[#B6825E] text-[#B6825E] py-3 px-4 rounded-lg hover:bg-[#B6825E] hover:text-white flex items-center justify-center gap-2"
+                className="w-full border-2 border-[#B6825E] text-[#B6825E] py-3 px-4 rounded-lg hover:bg-[#F7E5C5] hover:border-[#967259] hover:text-[#967259] transition-colors flex items-center justify-center gap-2"
               >
                 <FiUsers /> Join Group
               </button>

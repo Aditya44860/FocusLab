@@ -27,6 +27,7 @@ const ProgressBar = () => {
           const minutes = timerData[dateStr] || 0
           weekDays.push({ name: dayName, hours: minutes / 60, date: new Date(date) })
         }
+        console.log('Week data loaded:', weekDays)
         setWeekData(weekDays)
       }).catch(error => {
         console.error('Error loading week data:', error)
@@ -55,7 +56,10 @@ const ProgressBar = () => {
 
   useEffect(() => {
     loadWeekData()
-    const handleTimerUpdate = () => loadWeekData()
+    const handleTimerUpdate = () => {
+      console.log('Timer update event received, reloading week data')
+      loadWeekData()
+    }
     window.addEventListener('timerUpdate', handleTimerUpdate)
     return () => window.removeEventListener('timerUpdate', handleTimerUpdate)
   }, [userLoggedIn, user, weekOffset])

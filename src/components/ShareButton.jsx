@@ -1,27 +1,36 @@
 import React, { useState } from 'react'
 import { FiShare2, FiX, FiCopy } from 'react-icons/fi'
 import { firestore } from '../Firebase/Firebase'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { useAuth } from '../Firebase/AuthContext'
 
 const ShareButton = ({ noteTitle, noteContent, userId }) => {
   const [showModal, setShowModel] = useState(false)
   const [shareLink, setShareLink] = useState('')
   const [generating, setGenerating] = useState(false)
+  const { user } = useAuth()
 
   const generateShareLink = async () => {
+    if (!user) {
+      alert('You must be logged in to share notes')
+      return
+    }
+
     setGenerating(true)
     try {
-      const docRef = await addDoc(collection(firestore, 'publicNotes'), {
+      // Use the same global notes collection structure that already works
+      const docRef = await addDoc(collection(firestore, 'sharedNotes'), {
         title: noteTitle,
         content: noteContent,
-        sharedBy: userId,
-        createdAt: new Date()
+        sharedBy: user.uid,
+        createdAt: new Date(),
+        isPublic: true
       })
       const link = `${window.location.origin}/shared/${docRef.id}`
       setShareLink(link)
     } catch (error) {
       console.error('Error generating share link:', error)
-      alert('Failed to generate share link')
+      alert('Failed to generate share link. Please try again.')
     } finally {
       setGenerating(false)
     }

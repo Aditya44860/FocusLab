@@ -19,12 +19,27 @@ const Notes = () => {
   const [showWarning, setShowWarning] = useState(false)
   const [editingTitle, setEditingTitle] = useState(false)
   const [newTitle, setNewTitle] = useState('')
+  const [showNewDocModal, setShowNewDocModal] = useState(false)
+  const [newDocTitle, setNewDocTitle] = useState('')
 
   document.title = "FocusLab - Notes"
 
   useEffect(() => {
     if (userLoggedIn && user) {
       fetchDocs()
+      // Restore state from localStorage on refresh
+      const savedState = localStorage.getItem(`notes_state_${user.uid}`)
+      if (savedState) {
+        const { selectedDoc, content, newTitle } = JSON.parse(savedState)
+        if (selectedDoc) {
+          setSelectedDoc(selectedDoc)
+          setContent(content || '')
+          setNewTitle(newTitle || selectedDoc.title)
+          // Check if there are unsaved changes by comparing with original
+          const hasChanges = content !== selectedDoc.content || newTitle !== selectedDoc.title
+          setHasUnsavedChanges(hasChanges)
+        }
+      }
     } else {
       setDocs([])
       setSelectedDoc(null)
@@ -53,22 +68,30 @@ const Notes = () => {
   }
 
   const createNewDoc = async () => {
-    const docTitle = prompt('Enter document title:') || 'Untitled Document'
+    if (!newDocTitle.trim()) return
+    
     try {
       const docRef = await addDoc(collection(firestore, 'notes'), {
-        title: docTitle,
+        title: newDocTitle.trim(),
         content: '',
         userId: user.uid,
         createdAt: new Date(),
         lastModified: new Date()
       })
-      setSelectedDoc({ id: docRef.id, title: docTitle, content: '' })
+      setSelectedDoc({ id: docRef.id, title: newDocTitle.trim(), content: '' })
       setContent('')
-      setNewTitle(docTitle)
+      setNewTitle(newDocTitle.trim())
+      setShowNewDocModal(false)
+      setNewDocTitle('')
       fetchDocs()
     } catch (error) {
       console.error('Error creating document:', error)
     }
+  }
+
+  const handleNewDocSubmit = (e) => {
+    e.preventDefault()
+    createNewDoc()
   }
 
   const deleteDocument = async (docId) => {
@@ -90,6 +113,12 @@ const Notes = () => {
     setContent(document.content || '')
     setNewTitle(document.title)
     setHasUnsavedChanges(false)
+    // Save state to localStorage
+    localStorage.setItem(`notes_state_${user.uid}`, JSON.stringify({
+      selectedDoc: document,
+      content: document.content || '',
+      newTitle: document.title
+    }))
   }
 
   const goBackToList = () => {
@@ -106,6 +135,8 @@ const Notes = () => {
     setContent('')
     setHasUnsavedChanges(false)
     setShowWarning(false)
+    // Clear localStorage when exiting
+    localStorage.removeItem(`notes_state_${user.uid}`)
   }
 
   const handleNo = () => {
@@ -126,6 +157,8 @@ const Notes = () => {
       fetchDocs()
       setSaved(true)
       setHasUnsavedChanges(false)
+      // Clear localStorage after successful save
+      localStorage.removeItem(`notes_state_${user.uid}`)
       setTimeout(() => setSaved(false), 2000)
     } catch (error) {
       console.error('Error saving document:', error)
@@ -152,6 +185,12 @@ const Notes = () => {
                 onChange={(e) => {
                   setNewTitle(e.target.value)
                   setHasUnsavedChanges(true)
+                  // Update localStorage with new title
+                  localStorage.setItem(`notes_state_${user.uid}`, JSON.stringify({
+                    selectedDoc,
+                    content,
+                    newTitle: e.target.value
+                  }))
                 }}
                 onBlur={() => setEditingTitle(false)}
                 onKeyDown={(e) => {
@@ -205,6 +244,12 @@ const Notes = () => {
               onChange={(newContent) => {
                 setContent(newContent)
                 setHasUnsavedChanges(true)
+                // Update localStorage with current content
+                localStorage.setItem(`notes_state_${user.uid}`, JSON.stringify({
+                  selectedDoc,
+                  content: newContent,
+                  newTitle
+                }))
               }}
               title={selectedDoc.title}
             />
@@ -245,7 +290,7 @@ const Notes = () => {
               My Notes
             </h1>
             <button
-              onClick={createNewDoc}
+              onClick={() => setShowNewDocModal(true)}
               className="bg-[#B6825E] text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-[#967259] transition-colors flex items-center gap-2 font-semibold text-sm md:text-base"
             >
               <FiPlus size={16} className="md:w-5 md:h-5" />
@@ -300,6 +345,44 @@ const Notes = () => {
           )}
         </div>
       </div>
+      
+      {/* New Document Modal */}
+      {showNewDocModal && (
+        <div className="fixed inset-0 bg-black/85 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-4 w-full">
+            <h3 className="text-lg font-semibold text-[#4C4037] mb-4">Create New Document</h3>
+            <form onSubmit={handleNewDocSubmit}>
+              <input
+                type="text"
+                value={newDocTitle}
+                onChange={(e) => setNewDocTitle(e.target.value)}
+                placeholder="Enter document title..."
+                className="w-full p-3 border-2 border-[#C49B59] rounded-lg outline-none focus:border-[#B6825E] mb-4"
+                autoFocus
+              />
+              <div className="flex gap-3 justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowNewDocModal(false)
+                    setNewDocTitle('')
+                  }}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={!newDocTitle.trim()}
+                  className="px-4 py-2 bg-[#B6825E] text-white rounded hover:bg-[#967259] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

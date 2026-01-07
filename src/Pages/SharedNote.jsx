@@ -16,11 +16,16 @@ const SharedNote = () => {
 
   const fetchSharedNote = async () => {
     try {
-      const docRef = doc(firestore, 'publicNotes', id)
+      const docRef = doc(firestore, 'sharedNotes', id)
       const docSnap = await getDoc(docRef)
       
       if (docSnap.exists()) {
-        setNote({ id: docSnap.id, ...docSnap.data() })
+        const data = docSnap.data()
+        if (data.isPublic) {
+          setNote({ id: docSnap.id, ...data })
+        } else {
+          setError(true)
+        }
       } else {
         setError(true)
       }
