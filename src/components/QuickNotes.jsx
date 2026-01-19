@@ -19,8 +19,12 @@ const Notes = () => {
 
   useEffect(() => {
     if (userLoggedIn && user) {
-      const timeoutId = setTimeout(() => {
-        updateUserNotes(user.uid, note)
+      const timeoutId = setTimeout(async () => {
+        try {
+          await updateUserNotes(user.uid, note)
+        } catch (error) {
+          console.error('Failed to save note:', error)
+        }
       }, 1000)
       return () => clearTimeout(timeoutId)
     } else {

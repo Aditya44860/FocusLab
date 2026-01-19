@@ -17,7 +17,11 @@ const TodoList = () => {
   const saveTasks = async (newTasks) => {
     setTasks(newTasks)
     if (userLoggedIn && user) {
-      await updateUserTodos(user.uid, newTasks)
+      try {
+        await updateUserTodos(user.uid, newTasks)
+      } catch (error) {
+        console.error('Failed to save tasks:', error)
+      }
     }
   }
 

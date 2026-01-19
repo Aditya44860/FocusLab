@@ -15,24 +15,41 @@ export const initializeUserData = async (userId) => {
 }
 
 export const getUserData = async (userId) => {
-  const docRef = doc(firestore, 'user_data', userId)
-  const docSnap = await getDoc(docRef)
-  if (docSnap.exists()) {
-    return docSnap.data()
-  } else {
-    await initializeUserData(userId)
-    return { todos: [], quickNotes: '', timerData: { [new Date().toDateString()]: 0 } }
+  try {
+    const docRef = doc(firestore, 'user_data', userId)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) {
+      return docSnap.data()
+    } else {
+      await initializeUserData(userId)
+      return { todos: [], quickNotes: '', timerData: { [new Date().toDateString()]: 0 } }
+    }
+  } catch (error) {
+    console.error('Error getting user data:', error)
+    throw error
   }
 }
 
 export const updateUserTodos = async (userId, todos) => {
-  const docRef = doc(firestore, 'user_data', userId)
-  await setDoc(docRef, { todos }, { merge: true })
+  try {
+    const docRef = doc(firestore, 'user_data', userId)
+    await setDoc(docRef, { todos }, { merge: true })
+    console.log('Todos updated successfully')
+  } catch (error) {
+    console.error('Error updating todos:', error)
+    throw error
+  }
 }
 
 export const updateUserNotes = async (userId, quickNotes) => {
-  const docRef = doc(firestore, 'user_data', userId)
-  await setDoc(docRef, { quickNotes }, { merge: true })
+  try {
+    const docRef = doc(firestore, 'user_data', userId)
+    await setDoc(docRef, { quickNotes }, { merge: true })
+    console.log('Notes updated successfully')
+  } catch (error) {
+    console.error('Error updating notes:', error)
+    throw error
+  }
 }
 
 export const addTimerSession = async (userId, minutes) => {
