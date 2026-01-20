@@ -3,6 +3,7 @@ import Home from './Pages/Home'
 import Focus from './Pages/Focus'
 import Groups from './Pages/Groups'
 import Notes from './Pages/Notes'
+import Profile from './Pages/Profile'
 import SharedNote from './Pages/SharedNote'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthProvider } from './Firebase/AuthContext'
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
   { path: '/Focus', element: <><Navbar/><Focus/></> },
   { path: '/Groups', element: <Groups/> },
   { path: '/Notes', element: <><Navbar/><Notes/></> },
+  { path: '/Profile', element: <Profile/> },
   { path: '/shared/:id', element: <SharedNote/> }
 ])
 

@@ -1,23 +1,15 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../Firebase/AuthContext";
-import { doSignInWithGoogle, doSignOut } from "../Firebase/auth";
+import { doSignInWithGoogle } from "../Firebase/auth";
 import { FaUserCircle } from "react-icons/fa";
-import ProfilePopup from "./ProfilePopup";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showProfilePopup, setShowProfilePopup] = useState(false);
   const { userLoggedIn, user } = useAuth();
 
   const handleGoogleLogin = () => doSignInWithGoogle().catch(console.error);
 
-  const handleSignOut = () => {
-    doSignOut().catch(console.error);
-    setShowProfilePopup(false);
-  };
-
-  const toggleProfilePopup = () => setShowProfilePopup(!showProfilePopup);
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
@@ -35,14 +27,13 @@ const Nav = () => {
         {/* Mobile Menu Controls */}
         <div className="lg:hidden flex items-center gap-3">
           {userLoggedIn && (
-            <div className="relative">
+            <NavLink to="/Profile">
               {user?.photoURL ? (
                 <img 
                   src={user.photoURL} 
                   alt="Profile" 
                   className="w-9 h-9 rounded-full cursor-pointer mr-5 border-2 border-white shadow-lg"
-                  onClick={toggleProfilePopup}
-                  title="Click for profile menu"
+                  title="Go to profile"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     e.target.nextSibling.style.display = 'block';
@@ -51,16 +42,9 @@ const Nav = () => {
               ) : null}
               <FaUserCircle 
                 className={`w-8 h-8 text-[#FBF0E3] cursor-pointer hover:text-white border-2 border-white rounded-full shadow-lg ${user?.photoURL ? 'hidden' : 'block'}`}
-                onClick={toggleProfilePopup}
-                title="Click for profile menu"
+                title="Go to profile"
               />
-              <ProfilePopup 
-                user={user}
-                onLogout={handleSignOut}
-                onClose={() => setShowProfilePopup(false)}
-                isVisible={showProfilePopup}
-              />
-            </div>
+            </NavLink>
           )}
           <button 
             className="text-[#FBF0E3] focus:outline-none" 
@@ -125,14 +109,13 @@ const Nav = () => {
               Login
             </button>
           ) : (
-            <div className="flex items-center h-full px-4 relative">
+            <NavLink to="/Profile" className="flex items-center h-full px-4">
               {user?.photoURL ? (
                 <img 
                   src={user.photoURL} 
                   alt="Profile" 
                   className="w-10 h-10 rounded-full cursor-pointer border-2 border-white shadow-lg hover:shadow-white/50"
-                  onClick={toggleProfilePopup}
-                  title="Click for profile menu"
+                  title="Go to profile"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     e.target.nextSibling.style.display = 'block';
@@ -141,16 +124,9 @@ const Nav = () => {
               ) : null}
               <FaUserCircle 
                 className={`w-10 h-10 text-[#FBF0E3] cursor-pointer hover:text-white border-2 border-white rounded-full shadow-lg hover:shadow-white/50 ${user?.photoURL ? 'hidden' : 'block'}`}
-                onClick={toggleProfilePopup}
-                title="Click for profile menu"
+                title="Go to profile"
               />
-              <ProfilePopup 
-                user={user}
-                onLogout={handleSignOut}
-                onClose={() => setShowProfilePopup(false)}
-                isVisible={showProfilePopup}
-              />
-            </div>
+            </NavLink>
           )}
         </ul>
       </nav>

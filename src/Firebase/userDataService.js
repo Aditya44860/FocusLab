@@ -9,7 +9,8 @@ export const initializeUserData = async (userId) => {
     await setDoc(docRef, { 
       todos: [], 
       quickNotes: '', 
-      timerData: { [today]: 0 } 
+      timerData: { [today]: 0 },
+      totalFocusTime: 0
     })
   }
 }
@@ -22,7 +23,7 @@ export const getUserData = async (userId) => {
       return docSnap.data()
     } else {
       await initializeUserData(userId)
-      return { todos: [], quickNotes: '', timerData: { [new Date().toDateString()]: 0 } }
+      return { todos: [], quickNotes: '', timerData: { [new Date().toDateString()]: 0 }, totalFocusTime: 0 }
     }
   } catch (error) {
     console.error('Error getting user data:', error)
@@ -61,6 +62,9 @@ export const addTimerSession = async (userId, minutes) => {
 
   const timerData = data.timerData || {}
   timerData[today] = (timerData[today] || 0) + minutes
+  
+  // Update total focus time
+  const totalFocusTime = (data.totalFocusTime || 0) + minutes
   console.log('Updated timer data:', timerData)
   
   // Clean up data older than 14 days
@@ -72,6 +76,6 @@ export const addTimerSession = async (userId, minutes) => {
     }
   })
   
-  await setDoc(docRef, { timerData }, { merge: true })
+  await setDoc(docRef, { timerData, totalFocusTime }, { merge: true })
   console.log('Timer session saved successfully')
 }
