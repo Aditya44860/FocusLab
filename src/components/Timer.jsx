@@ -16,10 +16,13 @@ const Timer = () => {
   const [timerStart, setTimerStart] = useState(null);
   const [initialDuration, setInitialDuration] = useState(0);
 
-  const [defaults, setDefaults] = useState({
-    Pomodoro: { min: 25, sec: 0 },
-    ShortBreak: { min: 5, sec: 0 },
-    LongBreak: { min: 15, sec: 0 },
+  const [defaults, setDefaults] = useState(() => {
+    const saved = localStorage.getItem('timerDefaults');
+    return saved ? JSON.parse(saved) : {
+      Pomodoro: { min: 25, sec: 0 },
+      ShortBreak: { min: 5, sec: 0 },
+      LongBreak: { min: 15, sec: 0 },
+    };
   });
 
   const timeoutRef = useRef(null);
@@ -79,6 +82,7 @@ const Timer = () => {
         // Save exactly when seconds reach 00 (every minute)
         if (
           newSeconds === 0 &&
+          newMinutes < Math.floor(remaining / 600) + 1 && // Prevent duplicate saves on same minute
           elapsedMinutes > lastMinuteSavedRef.current &&
           elapsedMinutes > 0 &&
           userLoggedIn &&
@@ -97,12 +101,13 @@ const Timer = () => {
           setAlarmPlaying(true);
           alarmRef.current.play();
 
+          // Only save if at least 1 minute was completed
           const remainingMinutes = Math.max(
             0,
             elapsedMinutes - lastMinuteSavedRef.current,
           );
 
-          if (userLoggedIn && user && remainingMinutes > 0) {
+          if (userLoggedIn && user && remainingMinutes > 0 && elapsedMinutes > 0) {
             addTimerSession(user.uid, remainingMinutes).then(() => {
               setTimeout(
                 () => window.dispatchEvent(new CustomEvent("timerUpdate")),
@@ -230,6 +235,7 @@ const Timer = () => {
     }
 
     setDefaults(newDefaults);
+    localStorage.setItem('timerDefaults', JSON.stringify(newDefaults));
     setShowSettings(false);
   };
 
