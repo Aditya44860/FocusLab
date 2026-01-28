@@ -66,18 +66,19 @@ const Timer = () => {
   useEffect(() => {
     if (isActive && timerStart) {
       timeoutRef.current = setInterval(() => {
-        const elapsedSeconds = Math.floor((Date.now() - timerStart) / 1000);
-        const remaining = Math.max(0, initialDuration - elapsedSeconds);
-        const elapsedMinutes = Math.floor((Date.now() - sessionStart) / 60000);
+        const elapsedSeconds = Math.floor((Date.now() - timerStart) / 100);
+        const remaining = Math.max(0, initialDuration * 10 - elapsedSeconds);
+        const elapsedMinutes = Math.floor(elapsedSeconds / 600);
 
-        const newMinutes = Math.floor(remaining / 60);
-        const newSeconds = remaining % 60;
+        const newMinutes = Math.floor(remaining / 600);
+        const newSeconds = Math.floor((remaining % 600) / 10);
 
         setMinutes(newMinutes);
         setSeconds(newSeconds);
 
-        // ✅ Save exactly once per minute
+        // Save exactly when seconds reach 00 (every minute)
         if (
+          newSeconds === 0 &&
           elapsedMinutes > lastMinuteSavedRef.current &&
           elapsedMinutes > 0 &&
           userLoggedIn &&
@@ -115,7 +116,7 @@ const Timer = () => {
           setSessionStart(null);
           setTimerStart(null);
         }
-      }, 1000);
+      }, 100);
     } else {
       clearInterval(timeoutRef.current);
     }
