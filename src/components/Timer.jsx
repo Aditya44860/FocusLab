@@ -29,13 +29,19 @@ const Timer = () => {
   const saveCurrentSession = async () => {
     if (sessionStart) {
       const sessionDuration = Math.round((Date.now() - sessionStart) / 60000);
-      const remainingMinutes = Math.max(0, sessionDuration - lastMinuteSavedRef.current);
-      
+      const remainingMinutes = Math.max(
+        0,
+        sessionDuration - lastMinuteSavedRef.current,
+      );
+
       if (userLoggedIn && user && remainingMinutes > 0) {
         await addTimerSession(user.uid, remainingMinutes);
-        setTimeout(() => window.dispatchEvent(new CustomEvent('timerUpdate')), 100);
+        setTimeout(
+          () => window.dispatchEvent(new CustomEvent("timerUpdate")),
+          100,
+        );
       }
-      
+
       setFocusedTime(0);
       setSessionStart(null);
       lastMinuteSavedRef.current = 0;
@@ -60,13 +66,9 @@ const Timer = () => {
   useEffect(() => {
     if (isActive && timerStart) {
       timeoutRef.current = setInterval(() => {
-        const elapsedSeconds = Math.floor(
-          (Date.now() - timerStart) / 1000
-        );
+        const elapsedSeconds = Math.floor((Date.now() - timerStart) / 1000);
         const remaining = Math.max(0, initialDuration - elapsedSeconds);
-        const elapsedMinutes = Math.floor(
-          (Date.now() - sessionStart) / 60000
-        );
+        const elapsedMinutes = Math.floor((Date.now() - sessionStart) / 60000);
 
         const newMinutes = Math.floor(remaining / 60);
         const newSeconds = remaining % 60;
@@ -96,14 +98,14 @@ const Timer = () => {
 
           const remainingMinutes = Math.max(
             0,
-            elapsedMinutes - lastMinuteSavedRef.current
+            elapsedMinutes - lastMinuteSavedRef.current,
           );
 
           if (userLoggedIn && user && remainingMinutes > 0) {
             addTimerSession(user.uid, remainingMinutes).then(() => {
               setTimeout(
                 () => window.dispatchEvent(new CustomEvent("timerUpdate")),
-                100
+                100,
               );
             });
           }
@@ -127,28 +129,33 @@ const Timer = () => {
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-    return () =>
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [sessionStart, focusedTime, userLoggedIn, user]);
 
   useEffect(() => {
     document.title = isActive
       ? `FocusLab - ${String(minutes).padStart(2, "0")}:${String(
-          seconds
+          seconds,
         ).padStart(2, "0")}`
       : minutes === 0 && seconds === 0
-      ? "Time's Up!"
-      : "FocusLab";
+        ? "Time's Up!"
+        : "FocusLab";
   }, [minutes, seconds, isActive]);
 
   const setTimerMode = async (newMode) => {
     if (isActive && sessionStart) {
       const sessionDuration = Math.round((Date.now() - sessionStart) / 60000);
-      const remainingMinutes = Math.max(0, sessionDuration - lastMinuteSavedRef.current);
+      const remainingMinutes = Math.max(
+        0,
+        sessionDuration - lastMinuteSavedRef.current,
+      );
 
       if (userLoggedIn && user && remainingMinutes > 0) {
         await addTimerSession(user.uid, remainingMinutes);
-        setTimeout(() => window.dispatchEvent(new CustomEvent('timerUpdate')), 100);
+        setTimeout(
+          () => window.dispatchEvent(new CustomEvent("timerUpdate")),
+          100,
+        );
       }
     }
 
@@ -160,8 +167,8 @@ const Timer = () => {
       newMode === "Short Break"
         ? "ShortBreak"
         : newMode === "Long Break"
-        ? "LongBreak"
-        : "Pomodoro";
+          ? "LongBreak"
+          : "Pomodoro";
 
     const time = defaults[modeKey];
     setMode(newMode);
@@ -175,11 +182,17 @@ const Timer = () => {
   const resetTimer = async () => {
     if (isActive && sessionStart) {
       const sessionDuration = Math.round((Date.now() - sessionStart) / 60000);
-      const remainingMinutes = Math.max(0, sessionDuration - lastMinuteSavedRef.current);
+      const remainingMinutes = Math.max(
+        0,
+        sessionDuration - lastMinuteSavedRef.current,
+      );
 
       if (userLoggedIn && user && remainingMinutes > 0) {
         await addTimerSession(user.uid, remainingMinutes);
-        setTimeout(() => window.dispatchEvent(new CustomEvent('timerUpdate')), 100);
+        setTimeout(
+          () => window.dispatchEvent(new CustomEvent("timerUpdate")),
+          100,
+        );
       }
     }
 
@@ -224,8 +237,8 @@ const Timer = () => {
       mode === "Short Break"
         ? "ShortBreak"
         : mode === "Long Break"
-        ? "LongBreak"
-        : "Pomodoro";
+          ? "LongBreak"
+          : "Pomodoro";
 
     const time = defaults[modeKey];
     setMinutes(time.min);
@@ -244,8 +257,7 @@ const Timer = () => {
   return (
     <div className="relative w-full h-auto bg-[#F7E5C5] border-2 rounded-2xl border-[#C49B59] p-4 text-center">
       <h1 className="text-9xl text-[#4C3A26]">
-        {String(minutes).padStart(2, "0")}:
-        {String(seconds).padStart(2, "0")}
+        {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
       </h1>
 
       <div className="flex bg-[#EFD6B1] mt-7 justify-center items-center mx-auto p-1 rounded-full border-2 border-[#C49B59] text-sm overflow-hidden max-w-lg">
@@ -300,7 +312,92 @@ const Timer = () => {
           <div className="bg-[#EFD6B1] text-[#4C3A26] border-2 border-[#C49B59] rounded-2xl p-6 w-[90%] max-w-md">
             <h2 className="text-2xl mb-4 font-semibold">Settings</h2>
             <form onSubmit={updateDefaults} className="flex flex-col gap-4">
-              {/* settings form unchanged */}
+              <div>
+                <label className="block mb-1">Pomodoro</label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    name="pomMin"
+                    min="0"
+                    required
+                    defaultValue={defaults.Pomodoro.min}
+                    className="w-1/2 p-2 rounded border"
+                    placeholder="Minutes"
+                  />
+                  <p className="mt-2 font-bold"> : </p>
+                  <input
+                    type="number"
+                    name="pomSec"
+                    min="0"
+                    max="59"
+                    required
+                    defaultValue={defaults.Pomodoro.sec}
+                    className="w-1/2 p-2 rounded border"
+                    placeholder="Seconds"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block mb-1">Short Break</label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    name="shortMin"
+                    min="0"
+                    required
+                    defaultValue={defaults.ShortBreak.min}
+                    className="w-1/2 p-2 rounded border"
+                  />
+                  <p className="mt-2 font-bold"> : </p>
+                  <input
+                    type="number"
+                    name="shortSec"
+                    min="0"
+                    max="59"
+                    required
+                    defaultValue={defaults.ShortBreak.sec}
+                    className="w-1/2 p-2 rounded border"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block mb-1">Long Break</label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    name="longMin"
+                    min="0"
+                    required
+                    defaultValue={defaults.LongBreak.min}
+                    className="w-1/2 p-2 rounded border"
+                  />
+                  <p className="mt-2 font-bold"> : </p>
+                  <input
+                    type="number"
+                    name="longSec"
+                    min="0"
+                    max="59"
+                    required
+                    defaultValue={defaults.LongBreak.sec}
+                    className="w-1/2 p-2 rounded border"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-between mt-6">
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#C49B59] text-white rounded hover:brightness-110 transition"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowSettings(false)}
+                  className="px-4 py-2 bg-[#ae5d32]  text-white rounded hover:brightness-110 transition"
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         </div>
